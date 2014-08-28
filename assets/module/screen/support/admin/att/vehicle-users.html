@@ -1,0 +1,91 @@
+<style>
+  .block {overflow: visible}
+  .block-content {overflow:visible}
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-vehicle-users-report"><!--begin controller div-->
+  <block style="overflow:auto">
+      <div class="instructions-container">    
+
+        <h2 ng-click='hideInstructions = !hideInstructions'><i class="icon-minus-sign" ng-class="{'icon-plus-sign': hideInstructions == true,'icon-minus-sign': hideInstructions == false}" ></i> {{ "REPORTING" | trn }}: <span translate>Vehicle List</span></h2>
+        <div class="instructions" ng-show='!hideInstructions'>
+          <p class="intro" style="border-bottom:none;" translate>This utility can be used to view the users attached to a vehicleId.</p>
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+            
+      <div class="control-group well">
+        <form id="rangeType" name="rangeType" class="form-inline" ng-submit="getReport()">
+
+          <div common-vehicle-list='url.vehicleId'></div>
+          
+          <a class="btn btn-primary" ng-click="getReport()"><span translate>View Users</span></a> 
+
+        </form>
+        
+        <div ng-if="report || reportLoading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || reportLoading, 'alert-danger': report.noResults.length > 1}">
+          <div id='reportLoading' ng-show='reportLoading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              <span>{{ "LOADING" | trn}} {{ "REPORT" | trn}}...&nbsp;</span>
+          </div>
+          <div ng-show="report">
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}<br></div>
+            <strong>Total Users for <a href="/carcare/vehicles/vehicle_detail.jsp?vid={{ url.vehicleId }}" target="_self">Vehicle {{vehicleInfo.vehicleId}} - <span ng-show="vehicleInfo.vehicleNickname">"{{vehicleInfo.vehicleNickname}}" </span>{{vehicleInfo.year}} {{vehicleInfo.makeDesc}} {{vehicleInfo.modelDesc}}</a></strong>: {{report.length}} (including ATT)<br>
+          </div>
+        </div>
+      </div><!--end control group-->
+
+
+		<!-- hide/show columns -->
+	  <div ng-if='report && !report.noResults' class='control-group' id="quick-search">
+		  <div>
+			  <label for="orderSearch" class="label-inline" >{{ "FILTER_RESULTS_BY" | trn}}:</label>
+			  <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder="any vehicle ID, word, number, etc">
+		  
+        <span>&nbsp;&nbsp;<a style="margin-top:-9px;" class="btn pwd" ng-click="report.showSecurity = !report.showSecurity"><i class="icon-lock" ng-class="{'icon-lock': report.showSecurity == false,'icon-unlock': report.showSecurity == true}"></i></a> Show/Hide All</span>
+
+      </div>&nbsp;
+      
+		  
+	  </div>
+
+    <table if-role="SYSADMIN" ng-if="report" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            
+            <th class="sortable" th-sort-icon="personId">PID</th>
+            <th class="sortable" th-sort-icon="loginId">Login</th>
+            <th class="sortable" th-sort-icon="securityInfo.pwd">Pwd</th>
+            <th class="sortable" th-sort-icon="securityInfo.challengeQuestion">Question</th>
+            <th class="sortable" th-sort-icon="securityInfo.challengeAnswer">Answer</th>
+            <th class="sortable" th-sort-icon="firstName">First Name</th>
+            <th class="sortable" th-sort-icon="lastName">Last Name</th>
+
+            <th class="non-sortable">Roles</th>
+                     
+          </tr>
+        </thead>
+        <tbody ng-repeat="user in report | filter:filter.text | orderBy: sort.by : sort.reverse">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+            
+            <td>{{user.personId}}</td>
+            <td>{{user.loginId}}</td>
+            <td><a class="btn pwd" ng-click="user.showDetails = !user.showDetails"><i class="icon-lock" ng-class="{'icon-lock': user.showDetails == false || report.showSecurity == false,'icon-unlock': user.showDetails == true || report.showSecurity == true}"></i></a> <span ng-show='user.showDetails || report.showSecurity'>{{user.securityInfo.pwd}}</span></td>
+            <td><a class="btn pwd" ng-click="user.showDetails = !user.showDetails"><i class="icon-lock" ng-class="{'icon-lock': user.showDetails == false || report.showSecurity == false,'icon-unlock': user.showDetails == true || report.showSecurity == true}"></i></a> <span ng-show='user.showDetails || report.showSecurity'>{{user.securityInfo.challengeQuestion}}</span></td>
+            <td><a class="btn pwd" ng-click="user.showDetails = !user.showDetails"><i class="icon-lock" ng-class="{'icon-lock': user.showDetails == false || report.showSecurity == false,'icon-unlock': user.showDetails == true || report.showSecurity == true}"></i></a> <span ng-show='user.showDetails || report.showSecurity'>{{user.securityInfo.challengeAnswer}}</span></td>
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+
+            <td><span ng-repeat="role in user.businessRoles">{{role.businessRoleName}} </span></td>
+            
+          </tr>
+        </tbody>
+      </table>
+
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

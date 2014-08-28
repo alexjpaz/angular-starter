@@ -1,0 +1,11 @@
+#reports-nav {text-align:left}
+#reports-nav > .btn-primary > i {
+    font-size: 3.5em;
+}
+
+#reporting_nav {text-align:left}
+#reporting_nav > .btn-primary > i {
+    font-size: 3.5em;
+}
+
+#reports-nav > .reportingNav-button {width:110px}

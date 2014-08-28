@@ -1,0 +1,58 @@
+<style>
+.block, .block-content {overflow: visible}
+.block-heading {display:none}
+.block-content {border:none;padding:0}
+.shop_info, .shop_img_wrapper {display:none}
+
+h3.report-label {font-family:bebas_neueregular; letter-spacing:1px}
+.instructions-container > h2 {font-family:bebas_neueregular; letter-spacing: 1px}
+
+.reportingNav-button.miniMode {width:40px}
+.reportingNav-button.miniMode span {display:none}
+
+.icon-question-sign.more-info {cursor: pointer; color:#005580; font-size: 16px}
+.icon-question-sign.more-info:hover {color: #00315e}
+.popover-title {font-weight:bold}
+dfn.inline-text_tooltip {
+    border-bottom: 1px dotted #ddd;
+    cursor: help;
+    font-size: 90%;
+}
+
+</style>
+<div class="screen-trip-log-exporter-common-faq"><!--begin controller div-->
+  <block>
+    <div class="instructions-container">
+      <!--<div common-faq ng-show="page.showFAQ" tagged="trip-log" faq-title="Trip Log Reporting"></div>-->
+      <!--<div common-help tagged="trip-log" faq-title="FAQ: Trip Log Reporting"></div>-->
+      <!--<hr>
+      <p><strong>1st: anytags="true"; tagged="!tooltip,trip-log, trip-alert, !reporting,!modal".</strong><br>Will return any topics tagged trip-log or trip-alert, EXCLUDING those tagged tooltip, modal, or reporting.</p>
+      <div common-help tagged="!tooltip,trip-log, trip-alert, !reporting" anytags="true" faq-title="FAQ: Trip Logs, Trip Alerts"></div>
+      <hr>
+      <p><strong>2nd: anytags not defined, defaults to false; tagged="!modal, !tooltip,trip-log, trip-alert, !reporting".</strong>
+      <br>Will only return tags with both trip-log AND trip-alert tags, exluding those tagged tooltip or modal.</p>
+      <div common-help tagged="!tooltip,trip-log, trip-alert, !reporting" faq-title="FAQ: Trip Logs and Trip Alerts"></div>
+      <hr>
+      <p><strong>3rd: anytags not supplied, defaults to false; tagged="!modal, !tooltip, trip-log"</strong>
+      <br>Will return anything with a trip-log tag, EXCEPT those topics tagged "tooltip" or "modal"</p>
+      <div common-help tagged="!tooltip,trip-log" faq-title="FAQ: Trip Log"></div>-->
+      <h4>FAQ Example</h4><br>
+      <div common-help tagged="maintenance-center, !tooltip, !popover" anytags="true" faq-title="FAQ: Maintenance Center"></div>
+      <br><code>&lt;div common-help tagged="maintenance-center, !tooltip, !popover" anytags="true" faq-title="FAQ: Maintenance Center"&gt;&lt;/div&gt;</code><br><br>
+      <ul>
+        <li>Add the "common-help" attribute to any HTML element to replace it with the above "Need Help" FAQ.</li>
+        <li>To specify topics, supply tags as a comma-separated string to the "tagged" attribute. To exclude a tag, prefix it with an exclamation mark.</li>
+        <li>By default, tags are queried with AND functionality, meaning it will only return topics that match ALL supplied tags. To query with OR functionality and return all topics that match any supplied tags, add an attribute of <strong>anytags="true"</strong></li>
+        <li>To specify an FAQ title, use the faq-title attribute. If a title isn't specified, the title will default to "FAQ".</li>
+        <li>NOTE: the FAQ Data Model has been expanded so that each topic now has a "formats" object. Each topic will need different definitions for tooltip, popover, and FAQ implementations, and the "formats" object stores them. <br><br>When adding or editing a topic, you will see an "Add Format" button and dropdown. Simply select the format you want to add, click "Add Format". An input and content preview window will be added to the page so you can add shorter definitions for tooltips or popovers. The directives will look for their specific format first, but default to using the main FAQ content if the directive format isn't available. </li>
+      </ul>      
+      <hr>
+      <h4>Topic "Popover" Example:</h4><br>
+      <p>Something about a trip log or whatever. <span common-topic-popover="what-is-a-trip-log"></span></p>
+      <hr>
+      <h4>Tooltip Example</h4><br>
+      <dfn class="inline-text_tooltip" topic-tooltip="promotions-how-do-i-create-a-coupon">Creating a Coupon</dfn></p>
+      <p></p>
+    </div>
+  </block>
+</div>

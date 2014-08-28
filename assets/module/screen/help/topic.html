@@ -1,0 +1,16 @@
+<div class='screen-help-topic'>
+	<block-tab block-title='Topic not found' ng-show='error' links='help'>
+		<h4>Could not find topic</h4>
+		<span>Visit the <a href='/carcare/help/topic'>Topic index</a> to search for a topic.</span>
+	</block-tab>
+	<block-tab block-title='Topic: {{ topic.title }} ' ng-hide='error' links='help'>
+		<div ng-bind-html='topic.$sceContent'></div>
+		
+		<hr />
+		<div class='pull-left' show-role='SYSADMIN'>
+			<a class='btn btn-primary edit_button' link-topic-edit='{{ topic.id }}'><i class="icon-edit"></i> Edit</a>
+		</div>
+		<div topic-tags='topic.tags' class='pull-left'></div>
+		
+	</block-tab>
+</div>

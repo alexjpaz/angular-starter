@@ -1,0 +1,103 @@
+<style>
+  .block-heading {display:none}
+  .block-content {border-top: 1px solid #ccc; padding-top:18px}
+  #changelog_container {padding:14px}
+
+  /*.block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}*/
+  h2.bebas-header {
+    font-family: bebas_neueregular;
+    font-size: 32px !important;
+    letter-spacing:1px;
+    color:#005580;
+    margin-bottom:30px;
+  }
+  h3.bebas-header {
+    font-family: bebas_neueregular;
+    font-size: 21px !important;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    color:#333;
+  }
+
+  .img300 {width:300px}
+
+  .margin-right_10 {margin-right:10px}
+  .margin-bottom_10 {margin-bottom:10px;}
+
+  .changelog_content {clear:both}
+
+  /*.changelog_content.ng-binding > img {
+    float: left;
+    margin-right: 10px;
+  }*/
+
+  .needHelp_collapsed {cursor:pointer}
+  .needHelp_collapsed span.needHelp_text, i.icon-question-sign {
+    font-size: 14px;
+  }
+
+  .needHelp_collapsed i.icon-question-sign.needHelp_icon {
+    font-size: 16px;
+  }
+  .date-added_changelog {
+    font-size:12px;
+    margin-left:8px;
+    color:#555;
+    font-weight: bold;
+    margin-top: 5px;
+    float:left;
+  }
+
+  .textPointer {
+      cursor: text !important;
+  }
+
+  .search-query {width: 169px}
+
+  @media screen and (max-width: 830px){
+    .margin-bottom_10 {margin-bottom:4px}
+  }
+  @media screen and (max-width: 600px) {
+    #changelog_container h3 {margin-bottom: 0 !important}
+    .date-added_changelog {clear:both; margin-left: 0; margin-bottom: 30px}
+  }
+  @media screen and (max-width: 469px) {
+    i.icon-search {display:none}
+    .search-query {width:87%}
+    .img300 {width:100%; margin-left:-5px}
+    .img300.margin-bottom_10 {margin-bottom:15px !important}
+    .img300 {display: none}
+
+    .date-added_changelog {margin-bottom: 30px}
+  }
+
+</style>
+<div class="screen-change-log"><!--begin controller div-->
+  <block class="no-radius">
+    
+            
+      <!--<div id='loading' ng-show='loading && !changeLog' >
+        <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+        Loading Change Log...
+      </div>-->
+            
+      <div id="changelog_container">
+        <h2 class="bebas-header">What's New? <span ng-if='changeLog && !changeLog.noResults' class='control-group' id="quick-search"><input ng-model="filter.text" class="search-query" name="orderSearch" type="text" style="margin-bottom:0px" placeholder="Filter by..."> <i class="icon-search" style="color: #888; font-size:20px;margin-top: 5px"></i></span></h2>
+        
+        <div ng-if="!loading && changeLog">        
+          <div ng-repeat="change in changeLog | filter:filter.text | orderBy: sort.by : sort.reverse" style="clear:both; margin-top:20px">
+            <hr>
+            <h3 class="pull-left" ng-bind-html="change.messageTitle"></h3><span class="date-added_changelog pull-left">Added {{change.startDate | slashDate}}</span>
+            <div class="changelog_content" ng-bind-html="change.messageBody"></div>           
+          </div>
+        </div>
+        <div ng-if="!loading && !changeLog" class="alert alert-danger">Sorry for the inconvenience, but there was an unspecified error while retrieving the Change Log. Please try refreshing the page and <a href="/carcare/feedback.jsp">Contact Support</a> if the problem persists.</div>
+
+      </div>
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

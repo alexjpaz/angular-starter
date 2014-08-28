@@ -1,0 +1,50 @@
+<div class='screen-business-search'>
+	<block block-title='Search Data Table Example'>
+		<form ng-submit='q.page = 0; search()'>
+			<input ng-model='q.search' placeholder='Seach Text' />
+			<select ng-model='q.per_page' placeholder='Results per page'>
+				<option value='5'>5</option>
+				<option value='10'>10</option>
+				<option value='25'>25</option>
+				<option value='50'>50</option>
+			</select>
+			<!--<select ng-model='q.busTypeId'>-->
+				<!--<option value='REPAIRSHOP'>Repair Shop</option>-->
+			<!--</select>-->
+			<button class='btn btn-search btn--bump'>Search</button>
+		</form>
+		<i class='icon-spinner' ng-if='m.isSearching'></i>
+		<div class='alert alert-error' ng-if='m.error'>
+			<strong>Error:</strong>
+			<span>Could not retrieve business list</span>
+		</div>
+		<table class='table table-bordered' ng-if='result.businesses.length > 0'>
+			<thead>
+				<tr>
+					<th>Business Name</th>
+					<th>Business Type</th>
+					<th>Phone</th>
+					<th>Address</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='bs in result.businesses'>
+					<td><a href='#/business/{{bs.busEntId}}'>{{ bs.businessName }}</a></td>
+					<td>{{ bs.businessType }}</td>
+					<td>{{ bs.phoneNo }}</td>
+					<td>
+						<span>{{ bs.address }}</span>
+						<span>{{ bs.address2 }}</span>
+						<span>{{ bs.city }}</span>
+						<span>{{ bs.stateProve }}</span>
+						<span>{{ bs.countryCode }}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<ul class='pager'>
+			<li class='previous' ng-if='pager.previous'><a href ng-click='page(-1)'>Previous</a></li>
+			<li class='next' ng-if='pager.next'><a href ng-click='page(1)'>Next</a></li>
+		</ul>
+	</block>
+</div>

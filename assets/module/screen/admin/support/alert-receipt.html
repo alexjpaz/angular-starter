@@ -1,0 +1,87 @@
+<div class='screen-admin-support-alert-receipt'>
+	<div class="row-fluid padding-top">
+			<div class="span12 full">
+				<div class="block">
+					<div class="block-heading"></div><!-- end block-heading -->
+					<div class="block-content">
+                        <div class="instructions-container">    
+                            <h2><i class="icon-plus-sign" ng-click='toggleInstructions()'></i> Troubleshooting: Not Receiving Alerts</h2>
+							<div class="instructions" ng-show='showInstructions'>
+                                <p>This troubleshooting utility will run through a series of checks to help diagnose why a user isn't receiving an alert (or alerts). For example, the utility may check to make sure the selected alert type is enabled and configured, then check if the alert type is included in the package that the user subscribes to, and then check whether or not the user has setup an email address or cell phone to receive the selected alert type. Each diagnostic check will return results below the form of "Success", "Fail", or "Indeterminate", and may include a recommendation and/or a url to potentially resolve the issue. For more details you may refer to the Evernote "Troubleshooting: Not Getting Alerts."</p>
+                                
+                                <p><em>Please Note that for this utility, "today" refers to the time period beginning at 12:00am.</em></p>
+                            </div><!--end instructions-->
+                        </div><!-- instructions container-->
+                        <hr>
+                        <select id='scenario' style='max-width: 650px; min-width: 220px; width: 75%;' ng-model='scenario'>
+                            <option value="">Choose your scenario</option>
+                            <option value="1">Scenario 1: "I'm not getting [alertType] alerts today for vehicleId ###."</option>
+                            <option value="2">Scenario 2: "My cell phone and/or email isn't receiving [alertType] alerts today for vehicleID ###"</option>
+                            <option value="3">Scenario 3: "I'm not getting [alertType] alerts today for device serial number #######."</option>
+                            <option value="4">Scenario 4: "I didn't receive a specific alert for [deviceEventID]"</option>
+                        </select>
+
+                        <form id="troubleshooter" name="troubleshooter" ng-submit='submit()'>
+							<!-- $('#troubleshooter').prepend(...) -->
+							<div id='alert' ng-if='scenario > 0 && scenario <= 2'>
+								<label>Please select the alert type to troubleshoot.</label>
+							</div>
+							<select id='chooseAlert' name='chooseAlert' ng-model='f.alertType' ng-options='at.eventName as at.eventName for at in alertTypes' ng-if='scenario > 0 && scenario <= 2' required>
+								<option value=''>Please select the alert type...</option>
+							</select>
+							<label ng-if='troubleshooter.chooseAlert.$invalid' class='error'>Please select an alertType to troubleshoot</label>
+							<div id="cell" ng-if='scenario >= 2'>
+                                <label>Which cell phone number should be receiving alerts?</label>
+								<input name="alertCell" id="alertCell" type="tel"  ng-model='f.cell' class="bfh-phone" maxlength="15" placeholder="OPTIONAL: Alert Cell" ng-pattern='/\([0-9]{3}\) [0-9]{3}-[0-9]{4}/' minlength=10>
+								<span ng-if='troubleshooter.alertCell.$invalid'>Please enter a valid phone number, area code first (###) ###-####</span>
+                            </div>
+							<div id="email" ng-if='scenario >= 2'>
+                                <label>Which email address should be receiving alerts?</label>
+                                <input name="alertEmail" ng-model='f.emailAddress' id="alertEmail" type="email" maxlength="100" placeholder="OPTIONAL: Alert Email" />
+								<span ng-if='troubleshooter.alertEmail.$invalid'>Please enter a valid email</span>
+                            </div>
+                            <div id="vid" ng-if='scenario <= 2'>
+                                <label>Please enter the Vehicle ID you are troubleshooting alerts for:</label>
+                                <input name="vidInput" ng-pattern='/[0-9]+/' required ng-model='path.vid' id="vidInput" type="text" >&nbsp;
+                            </div>
+                            <div id="deviceSerial" ng-if='scenario == 3'>
+                                <label>Please enter the Serial Number of the device that did not receive an alert:</label>
+                                <input name="deviceSerialInput" required ng-pattern='/[0-9]+/' minlength='16' maxlength='16' ng-model='f.deviceSn' id="deviceSerialInput" type="text" maxlength="16">
+
+                            </div>
+                            <div id="deviceEvent" ng-if='scenario == 4'>
+                                <label>Please enter the Device Event ID you did not receive an alert for:</label>
+                                <input name="deviceEventInput" required ng-model='path.deviceEventId' id="deviceEventInput" type="text" >
+								<label class='error' ng-if='troubleshooter.deviceEventInput.$error.required'>deviceEventId is required to troubleshoot Scenario 3</label>
+                            </div>
+							<input type="submit" id="submit" class="btn btn-primary" value="Run Diagnostics" ng-if='scenario > 0' ng-disabled='troubleshooter.$invalid'>
+
+							<hr />
+
+                            <div id='diagnostics-results'>
+								<div id='vehicle_info' class='alert alert-info' ng-if='isSearchingForVehicleInfo'>
+									<div id='loading' ng-if='!vehicleInfo'>
+										<img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />Running&nbsp;</div>
+									<div id='searchingFor' style='display:inline-block;' ng-if='vehicleInfo'>
+										<span>Diagnostics for <a ng-href='/carcare/vehicles/vehicle_detail.jsp?vid={{ path.vid }}' target='_blank'>{{ vehicleInfo.vehicleNickname }} {{ vehicleInfo.vehicleText }}</a></span>
+									</div>
+								</div>
+								<div id='results' ng-if='response'>
+									<!-- ng-class needs to be moved into the code -->
+									<div id='diagnostic' class='alert' ng-class="{'alert-success': dd.result === 'SUCCESS', 'alert-danger': dd.result === 'FAIL' || dd.result == 'INDETERMINATE' , 'alert--no-border-bg': !(dd.result === 'FAIL' || dd.result == 'INDETERMINATE' || dd.recommendedActions ) }" ng-repeat='dd in response.diagChecksCompleted'>
+										<span class='check-type'>{{ dd.check }}: <br/></span>
+										<i class='icon-check-sign'></i>
+										<strong>{{ dd.result }}</strong>
+										<span class='check-message' ng-bind-html="dd.message"></span>
+										<div ng-repeat='ra in dd.recommendedActions'>
+											<i class='icon-arrow-right'></i>
+											<strong>Recommended Actions</strong>: <span class='check-message'>{{ ra }}</span>
+										</div>
+									</div>
+								</div>
+							</div> 
+                        </form>
+					</div><!-- end block-content -->
+				</div><!-- end block -->
+			</div><!-- end span12 full -->
+</div>

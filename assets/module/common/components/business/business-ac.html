@@ -1,0 +1,16 @@
+<div class='business-ac'>
+	<input type='text' ng-model='q.search' ng-change='change()' />
+	<i class='icon-spinner' ng-if='isSearching'></i>
+	<div class='business-ac__results' ng-if='isFocused'>
+		<div class='business-ac__item'
+			ng-repeat='r in results'
+			ng-click='select(r)' 
+			ng-mouseenter='hover($index)'
+			ng-class="{'business-ac__item--selected': $index == $selectedIndex }">
+			<strong>{{ r.businessName }}</strong>
+			<span>{{ r.businessType }}</span>
+			<em>{{ r.phoneNo }}</em>
+		</div>
+	</div>
+
+</div>

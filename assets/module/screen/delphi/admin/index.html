@@ -1,0 +1,35 @@
+<div class="screen-delphi-admin-index"><!--begin controller div-->
+  <style>#reports-nav {text-align:center !important}</style>
+  <block>
+    <h2 style="text-align:center" translate>Delphi Admin Tools</h2>
+    <table class="table table-striped table-bordered" id="supportIndex">
+      <thead>
+        <th style="width:150px">{{ trans.REPORT | trn }}</th>
+        <th><span translate>Description</span></th>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="width:150px"><a href="/delphi/admin/expiring-demos"><i class="icon-time"></i>&nbsp; Expiring Demos Report</a></td>
+          <td>This utility can generate a report of all demo devices expiring within a user-specified period of time. By default the report will generate a report of all devices expiring in 30 days.</td>
+        </tr>
+        <tr>
+          <td style="width:150px"><a href="/delphi/admin/delphi_devices.jsp" target="_self"><i class="icon-plus-sign"></i>&nbsp; Add Devices</a></td>
+          <td>This utility allows Delphi Admin to add new Devices to ATT's System.</td>
+        </tr>
+        <tr>
+          <td style="width:150px"><a href="/delphi/admin/missing-maintenance"><i class="icon-calendar"></i>&nbsp; Missing Maintenance Schedules</a></td>
+          <td>This utility generates a report of vehicles without maintenance schedules.</td>
+        </tr>
+        <tr>
+          <td style="width:150px"><a href="/delphi/admin/born-to-ota"><i class="icon-time"></i>&nbsp; Time From Born to OTA Complete</a></td>
+          <td>This reporting utility allows you to compare the time a device was "Born" with the time that its OTA Completed. The report you generate includes all devices that we've received Born Alerts for, along with the time of the 'OTA Complete' alert indicating that software has been successfully updated.</td>
+        </tr>
+        <tr>
+          <td style="width:150px"><a href="/support/admin"><i class="icon-wrench"></i>&nbsp; Admin Support Tools</a></td>
+          <td>This page contains a number of additional support tools available to vehimatics admin.</td>
+        </tr>
+      </tbody>
+    </table>
+  </block>
+
+</div><!-- end controller div-->

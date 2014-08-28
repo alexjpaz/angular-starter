@@ -1,0 +1,141 @@
+<style>
+  .block {overflow: visible}
+  .block-content {overflow:auto}
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-vehicle-list-report"><!--begin controller div-->
+  <div reports-nav></div>
+  <block style="overflow:auto">
+      <div class="instructions-container">    
+
+        <h2 ng-click='hideInstructions = !hideInstructions'><i class="icon-minus-sign" ng-class="{'icon-plus-sign': hideInstructions == true,'icon-minus-sign': hideInstructions == false}" ></i> {{ "REPORTING" | trn }}: <span translate>Vehicle List</span></h2>
+        <div class="instructions" ng-show='!hideInstructions'>
+          <p class="intro" style="border-bottom:none;" translate>This utility can be used to export a Vehicle List Report to a csv file (Comma Separated Value). CSV files can be saved and opened by a spreadsheet program like Microsoft Excel.</p>
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+      <div ng-hide="userReports.VEHICLE_LIST" class="control-group well">
+        <p>Your account does not have permission to view this report. If you believe this is in error, please contact support: {{ userData.support }}</p>
+      </div>
+      
+      <div ng-show="userReports.VEHICLE_LIST" class="control-group well">
+        <div id="languageControl-div" show-role='SYSADMIN' class='controls' reports-lang></div>
+        <div class="control-group" id="generate-report">
+          
+          <a class="btn btn-primary" ng-click="getReport()"><span translate>View List</span></a>
+
+          <a class="btn btn-primary" ng-href="/telematics/rest/reporting/vehicle/list/export" target="_blank">{{ "EXPORT_AS_CSV" | trn }}</a>
+
+        </div>
+        <div ng-if="report || reportLoading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || reportLoading, 'alert-danger': report.noResults.length > 1}">
+          <div id='reportLoading' ng-show='reportLoading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              <span>{{ "LOADING" | trn}} {{ "REPORT" | trn}}...&nbsp;</span>
+          </div>
+          <div ng-show="report">
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}<br></div><br ng-if="!fleet && !vehicleList ">
+            <strong><span translate>Total Vehicles in Report</span></strong>: {{report.length}}<br>
+          </div>
+        </div>
+      </div><!--end control group-->
+
+
+		<!-- hide/show columns -->
+	  <div ng-if='report && !report.noResults && userReports.VEHICLE_LIST' class='control-group' id="quick-search">
+		  <div>
+			  <label for="orderSearch" class="label-inline" >{{ "FILTER_RESULTS_BY" | trn}}:</label>
+			  <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder="any vehicle ID, word, number, etc">
+		    
+        <div class='reports-visibility dropdown pull-right'>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span translate>Show / Hide Columns</span></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li ng-repeat='col in columns' ng-init='ch = hide[col.columnKey]'>
+              <a href ng-click='toggleColumn(col.columnKey)' ng-class="{'hidden-column': hide[col.columnKey]}">
+                <i class='icon-eye-open' ng-hide='hide[col.columnKey]'></i>
+                <i class='icon-eye-close' ng-show='hide[col.columnKey]'></i>
+                <span ng-bind='{{ col.trnKey | trn }}'></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+		  
+	  </div>
+
+
+	  
+      <table ng-if="report && userReports.VEHICLE_LIST" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            <th ng-hide='hide.vehicleNickname' class="sortable" th-sort-icon="vehicleNickname">{{ "VEHICLE" | trn}}</th>
+            
+            <th ng-hide='hide.vin' class="sortable" th-sort-icon="vin">{{ "VIN" | trn}}</th>
+            
+            <th ng-hide='hide.vehicleId' class="sortable" th-sort-icon="vehicleId">{{ "VEHICLE_ID" | trn}}</th>
+            
+            <th ng-hide='hide.hybridYn' class="sortable" th-sort-icon="hybridYn" ><span translate>Hybrid?</span></th>
+
+            <th ng-hide='hide.calculatedOdometer' class="sortable" th-sort-icon="calculatedOdometer"><span translate>Calculated Odometer</span></th>
+
+            <th ng-hide='hide.packageDesc' class="sortable" th-sort-icon="packageDesc"><span translate>Package</span></th>
+            
+            <th ng-hide='hide.packageStartDate' class="sortable hidden-tablet hidden-phone" th-sort-icon="$sortPackageStartDate"><span translate>Package Start<span></th>
+            
+            <th ng-hide='hide.packageExpireDate' class="sortable" th-sort-icon="$sortPackageExpireDate"><span translate>Package Expires<span></th>
+            
+            <th ng-hide='hide.packageDaysLeft' class="sortable" th-sort-icon="packageDaysLeft"><span translate>Days Left</span></th>
+
+            <th ng-hide='hide.activationStatusDesc' class="sortable" th-sort-icon="activationStatusDesc">{{ "STATUS" | trn}}</th>
+
+            <th ng-hide='hide.demoDevice' class="sortable" th-sort-icon="demoDevice"><span translate>Demo?</span></th>
+            
+            <th ng-hide='hide.maintSchedOnFileYn' class="sortable" th-sort-icon="maintSchedOnFileYn"><span translate>Maintenance Schedule?</span></th>
+            
+            <th ng-hide='hide.maintSchedLastChecked' class="sortable" th-sort-icon="$sortMaintSchedLastChecked"><span translate>Schedule Last Checked</span></th>
+            
+            <th ng-hide='hide.vehicleOwnerName' class="sortable hidden-tablet hidden-phone" th-sort-icon="vehicleOwnerName"><span translate>Owner</span></th>
+                     
+            <th ng-hide='hide.deviceSerialNo' class="sortable hidden-tablet hidden-phone" th-sort-icon="deviceSerialNo"><span translate>Device Serial</span></th>
+
+            <th ng-hide='hide.deviceSoftwareVersion' class="sortable hidden-tablet hidden-phone" th-sort-icon="deviceSoftwareVersion"><span translate>Software Version</span></th>
+            
+            <th ng-hide='hide.cableRequiredYn' class="sortable hidden-tablet hidden-phone" th-sort-icon="cableRequiredYn"><span translate>Cable Required?</span></th>
+            
+            <th ng-hide='hide.cableUsedYn' th-sort-icon="cableUsedYn"><span translate>Cable Used?</span></th>
+            
+          </tr>
+        </thead>
+        <tbody ng-repeat="v in report | filter:filter.text | orderBy: sort.by : sort.reverse | limitTo: limitToHack">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+            
+            <td ng-hide='hide.vehicleNickname'><a ng-href="/carcare/vehicles/vehicle_detail.jsp?vid={{v.vehicleId}}" target="_self"><span class="vehicleNick-reports">{{v.vehicleNickname}}</span> <span ng-show="v.vehicleNickname"> - </span> {{v.year}} {{v.makeDesc}} {{v.modelDesc}} {{v.engineDesc}}</a></td>
+            <td ng-hide='hide.vin'>{{v.vin}}</td>
+            <td ng-hide='hide.vehicleId'>{{v.vehicleId}}</td>
+            <td ng-hide='hide.hybridYn'>{{v.hybridYn}}</td>
+            <td ng-hide='hide.calculatedOdometer'>{{v.calculatedOdometer}} {{v.distanceUom}}</td>
+            <td ng-hide='hide.packageDesc'>{{v.packageDesc}}</td>
+            <td ng-hide='hide.packageStartDate' class="hidden-tablet hidden-phone">{{v.packageStartDate}}</td>
+            <td ng-hide='hide.packageExpireDate'>{{v.packageExpireDate}}</td>
+            <td ng-hide='hide.packageDaysLeft'>{{v.packageDaysLeft}}</td>
+            <td ng-hide='hide.activationStatusDesc'>{{v.activationStatusDesc}}</td>
+            <td ng-hide='hide.demoDevice'>{{v.demoDevice}}</td>
+            <td ng-hide='hide.maintSchedOnFileYn'>{{v.maintSchedOnFileYn}}</td>
+            <td ng-hide='hide.maintSchedLastChecked'>{{v.maintSchedLastChecked}}</td>
+            <td ng-hide='hide.vehicleOwnerName' class="hidden-tablet hidden-phone">{{v.vehicleOwnerName}}</td>
+            <td ng-hide='hide.deviceSerialNo' class="hidden-tablet hidden-phone">{{v.deviceSerialNo}}</td>        
+            <td ng-hide='hide.deviceSoftwareVersion' class="hidden-tablet hidden-phone">{{v.deviceSoftwareVersion}}</td>
+            <td ng-hide='hide.cableRequiredYn' class="hidden-tablet hidden-phone">{{v.cableRequiredYn}}</td>
+            <td ng-hide='hide.cableUsedYn' class="hidden-tablet hidden-phone">{{v.cableUsedYn}}</td>
+            
+          </tr>
+        </tbody>
+      </table>
+
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

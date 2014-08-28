@@ -1,0 +1,32 @@
+a.needHelp_collapsed {cursor:pointer}
+a.needHelp_collapsed span.needHelp_text {font-size: 16px}
+a.needHelp_collapsed i.icon-question-sign.needHelp_icon {font-size:20px} 
+.needHelp_collapsed {cursor:pointer}
+.needHelp_collapsed span.needHelp_text {font-size: 16px}
+.needHelp_collapsed i.icon-question-sign.needHelp_icon {font-size:20px}
+
+.inlineFAQ-container {background:none; border:1px solid transparent; padding: 10px} /*BORDERED*/
+.inlineFAQ-container.expandedFAQ {background-color:#fcfcfc; border-color:#eee;} /*BORDERED*/
+.inlineFAQ-container.borderedFAQ {background-color:#fcfcfc; border-color:#eee;}
+/*.inlineFAQ-container {background:none; border:1px solid transparent; padding: 0px}*//*BORDERLESS IMPLEMENTATION*/
+.inlineFAQ-container > hr {margin: 0 0 18px 0}
+/*.inlineFAQ-container .windowControls {margin-right: 16px; margin-top: 9px}*/
+.inlineFAQ-container .windowControls i {font-size:15px}
+#inlineFAQ.alert p:last-child, .alert ul > li:last-child, .alert ul:last-child {margin-bottom:20px}
+#inlineFAQ.alert {padding-right:10px}
+#inlineFAQ.alert p {padding-right: 40px}
+#accordionFAQ.accordion {margin-top:12px;margin-bottom:0}
+#accordionFAQ .accordion-heading {background-color: #eaeaea}
+#accordionFAQ .accordion-heading i {margin-right:10px}
+#accordionFAQ .sub-heading {border-top: 1px solid #ccc; background-color:#fff}
+#accordionFAQ .sub-heading p {color:black; font-weight: normal}
+
+.instructions-container > h2 > span.needHelp {
+  display:none; 
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height:12px !important
+}
+.instructions-container > h2:hover > span.needHelp {display:inline}
+span.needHelp {font-size:12px}
+.clearfix.accordion-heading a li {color: #333}
+.button-screenshot_faq {height:20px;vertical-align:middle}

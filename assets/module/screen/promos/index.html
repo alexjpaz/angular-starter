@@ -1,0 +1,120 @@
+<style>
+  .coupon-contents {overflow:hidden;height:200px}
+  .coupon-contents h1 {font-size:20px; line-height:25px; margin-top:5px}
+  .coupon-contents h3 {font-size:13px}
+  .coupon-shell {width: 32%; margin-right: .5%}
+</style>
+<div class="screen-current-coupons"><!--begin controller div-->
+  <block-tab links='promos' block-title="Promotions">
+    <!--<pre>{{Session}}</pre>-->
+    
+    <div>
+      <div ng-show="couponAction.completed && urLOL.success" class="alert alert-success"><i class="icon-thumbs-up"></i>&nbsp;{{couponAction.text}}</div>
+      
+      <h3 class="bebas-header">My Current Coupons<div class="btn-group pull-right">
+            <button title="Thumbnail View" class="btn" ng-click='page.thumbnailView = true' ng-class="{'active':page.thumbnailView == true}" ><i class="icon-th"></i></button>
+            <button title="List View" class="btn" ng-click='page.thumbnailView = false' ng-class="{'active':page.thumbnailView == false}"><i class="icon-th-list"></i></button>        
+          </div></h3>
+        <p>The coupons in "My Current Coupons" will be shown to any of your customers with DTC's or upcoming maintenance operations that fall under that coupon's "Service Alert Groups". A "Service Alert Group" (or SAG) is a grouping of maintenance operations and DTC's that will trigger your coupon being shown to a customer, giving them coupons related to the current health of their vehicle. Once a coupon has been added to "My Current Coupons", the promotion is considered "live" and will automatically be shown to your users from the start date to the expiration date.</p>
+        <div common-help tagged="promo-admin, my-coupons"  faq-title="FAQ: My Coupons"></div>
+    </div>
+
+    <div ng-if='coupons' class='control-group' id="quick-search">
+      <hr>
+      <div>
+        <div class="btn-toolbar">
+          <!--<label for="orderSearch" class="label-inline" >Filter by</label>-->
+          <input ng-model="filter.text" class="couponThumbnailView search-query" name="orderSearch" id="orderSearch" type="text" placeholder="Filter by any word, date, etc">
+        </div>
+        
+      </div>
+    </div>
+
+    <div id="thumbnailView">
+      <div ng-repeat="coupon in coupons | filter:filter.text | orderBy: sort.by : sort.reverse" ng-show='coupons && page.thumbnailView && !coupon.deleted' id="coupon-container" class="coupon-shell myCoupons" ng-class="{'mfg-coupon': coupon.couponType == 'MFG', 'couponA': coupon.cssStyle == 'couponA', 'couponB': coupon.cssStyle == 'couponB','couponC': coupon.cssStyle == 'couponC', 'couponD': coupon.cssStyle == 'couponD', 'couponE': coupon.cssStyle == 'couponE', 'expired': (coupon.$endDate < currentTimeUnix) || (coupon.$startDate > currentTimeUnix) || coupon.couponStatus === 'S'}" style="float:left">
+          
+          <div id="coupon" class="coupon-outer">
+            <div class="coupon-inner">
+              <div class="coupon-contents coupon-status">
+                <div class="coupon-controls">
+                  <a href="/carcare/promos/print.jsp?promoCouponId={{coupon.promoCouponId}}" title="Preview Full Coupon or Print"><i class="icon-zoom-in"></i></a>
+                  <!--<a ng-click="clipCoupon(coupon)" title="Clip Coupon"><i class="icon-cut"></i></a>-->
+                  <!--<a ng-href="/carcare/promos/print.jsp?promoCouponId={{coupon.promoCouponId}}" title="Print Coupon"><i class="icon-print"></i></a>-->
+                  <a ng-show="(coupon.$startDate > currentTimeUnix) && coupon.couponType !== 'MFG'" ng-href="/carcare/promos/create-sag-coupons?edit={{coupon.promoCouponId}}" title="Edit Coupon"><i class="icon-edit"></i></a>
+                  <a ng-hide="coupon.couponType === 'MFG'" href="/carcare/promos/create-sag-coupons?copy={{coupon.promoCouponId}}" title="Create Coupon from this coupon"><i class="icon-copy"></i></a>
+                  <a ng-show="(coupon.$startDate < currentTimeUnix) && coupon.couponStatus !== 'S'" ng-click="suspendCoupon(coupon)" title="Suspend Coupon Exposures"><i class="icon-pause"></i></a>
+                  <a ng-show="(coupon.$startDate < currentTimeUnix) && coupon.couponStatus === 'S'" ng-click="resumeCoupon(coupon)" title="Resume Coupon Exposures"><i class="icon-play"></i></a>
+                  <a ng-show="coupon.couponCanBeDeleted" ng-click="deleteCoupon(coupon)" title="Delete Coupon"><i class="icon-trash"></i></a>
+                  
+                </div>
+                <hr>
+                <h1>Coupon {{coupon.couponUiStatus}}</h1>
+                <p class="center">
+                  <span ng-show='coupon.$endDate < currentTimeUnix'>Coupon Expired {{coupon.$endDate * 1000 | date:'MM/dd/yy'}}.</span>
+                  <span ng-show='coupon.$startDate > currentTimeUnix'>Promotion Starts {{coupon.$startDate * 1000 | date:'MM/dd/yy'}}.</span>
+                </p>
+                <hr>
+                <p class="couponSAG center">
+                  <span>Coupon Triggered By "<a ng-href="/carcare/promos/create-sag-coupons?sag={{coupon.sagId}}">{{coupon.sagDesc}}</a>"</span>
+                  <span ng-show="coupon.couponMfgs.0.logoUrl || coupon.couponType === 'MFG'"><br>Manufacturer: {{coupon.couponMfgs.0.brandLabel || "Gates"}}</span>
+                </p>
+              </div>
+              <div class="coupon-contents thumbnail-preview">
+                <div class="couponLogo-container">
+                  <img ng-repeat="logo in coupon.couponMfgs" ng-src="{{ logo.logoUrl}}">
+                  <img ng-show="!coupon.couponMfgs.0.logoUrl && coupon.couponType !== 'MFG'" ng-src="//s3.amazonaws.com/bucketimgs3{{Session.applicationBranding.affiliationLogo}}.png">
+                  <!--<img ng-show="!coupon.couponMfgs.0.logoUrl && coupon.couponType === 'MFG'" src="//s3.amazonaws.com/bucketimgs3/shared/img/promos/gates/promo-logo.png">-->
+                </div>
+                <h4>{{coupon.startDate | date:'MM/dd/yy'}} - {{coupon.endDate | date:'MM/dd/yy'}}</h4>
+                <h1 class="hideOverflow">{{coupon.couponDesc}}</h1>
+                <h3 class="hideOverflow">{{coupon.couponText}}</h3>
+                <div>
+                  <p style="text-align:center;font-style:italic;font-size:8pt;">{{coupon.couponCode || "SAMPLC0D3"}}<br>{{coupon.couponValueText | uppercase}}</p>
+                </div>
+              </div><!-- coupon-contents -->
+            </div><!--coupon-inner-->
+          </div><!-- coupon-outer -->
+        </div><!-- coupon-container coupon-shell-->
+      </a>
+    </div>
+
+    
+    <table ng-show='coupons && !page.thumbnailView' id="orders_report" class="table table-striped table-bordered" >
+      <thead>
+        <tr>
+          <th class='sortable' th-sort-icon='promoCouponId'>ID</th>
+          <th class='sortable' th-sort-icon='couponDesc'>Title</th>
+          <th class='sortable' th-sort-icon='couponText'>Text</th>
+          <th class='sortable' th-sort-icon='couponValueText'>Value</th>
+          <th class='sortable' th-sort-icon='couponCode'>Code</th>
+          <th class='sortable' th-sort-icon='$startDate'>Starts</th>
+          <th class='sortable' th-sort-icon='$endDate'>Expires</th>
+          <th class='sortable' th-sort-icon='$endExposureDate'>End Exposures</th>
+          <th class='sortable' th-sort-icon='sagId' style='width:69px'>SAG</th>
+          <th class='non-sortable' style='width:100px'></th>
+        </tr>
+      </thead>
+      <tbody class="hoverBody" ng-repeat="coupon in coupons | filter:filter.text | orderBy: sort.by : sort.reverse">
+        <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'" >
+          
+          <td>{{coupon.promoCouponId}}</td>
+          <td>{{coupon.couponDesc}}</td>
+          <td>{{coupon.couponText}}</td>
+          <td>{{coupon.couponValueText}}</td>
+          <td>{{coupon.couponCode}}</td>
+          <td>{{coupon.startDate}}</td>
+          <td>{{coupon.endDate}}</td>
+          <td>{{coupon.endExposureDate}}</td>
+          <td style='width:69px'>{{coupon.sagId}}</td>
+          <td style="widtd:100px"><a ng-href="/carcare/promos/create-sag-coupons?edit={{coupon.promoCouponId}}" class="btn btn-primary">Edit Coupon</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+    <div id='reportLoading' ng-show='reportLoading && !coupons' >
+        <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+        <span translate>Loading Current Coupons...&nbsp;</span>
+    </div>
+	  
+  </block-tab>
+</div>

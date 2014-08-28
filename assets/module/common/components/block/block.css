@@ -1,0 +1,25 @@
+/*
+ * Component specific css
+ */
+.block {
+	overflow: hidden;
+}
+
+.block--tabs {
+
+}
+
+.block__tab-content {
+	float: left;
+	width: 90%;
+}
+
+.block__tabs {
+	float: left;
+	width: 10%;
+}
+
+.block-content {
+	overflow: hidden;
+}
+

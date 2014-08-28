@@ -1,0 +1,14 @@
+<div class='common-vehicle-list'>
+	<div id='loadingVehicles-reporting' ng-hide='vehicles' >
+	 	<img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+	 	{{ "LOADING_VEHICLES" | trn}}...&nbsp;
+	 	<hr>
+	</div>
+	<div ng-show='vehicles'>
+		<select v-chosen class="vehicle-input" ng-model="commonVehicleList" id="vidDropdown-select">
+			<option value="">-- {{ "CHOOSE_VEHICLE_FOR_REPORT" | trn }} --</option>
+			<option ng-selected="{{vehicle.vehicleId == vehicleListAutocomplete }}" ng-repeat="vehicle in vehicles" value="{{vehicle.vehicleId}}">{{vehicle.vehicleNickname }} - {{vehicle.year}} {{vehicle.makeDesc}} {{vehicle.modelDesc}} {{vehicle.vehicleId | ifRole: 'SYSADMIN'}}</option>
+		</select>
+	</div>
+	<hr />
+</div>

@@ -1,0 +1,193 @@
+<style>
+  .block, .block-content {overflow: visible}
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-mileage-report-fleet"><!--begin controller div-->
+  <div reports-nav></div>
+  <block>
+	    <div class="instructions-container">    
+
+        <h2 ng-click='showInstructions = !showInstructions'><i class="icon-plus-sign" ng-class="{'icon-plus-sign': showInstructions == false,'icon-minus-sign': showInstructions == true}" ></i> {{ "REPORTING" | trn }}: {{ "MILEAGE_REPORT" | trn}} - <span translate>By Location</span></h2>
+        <div class="instructions" ng-show='showInstructions'>
+          <p class="intro">{{ "MILEAGE_REPORT_DESC" | trn }}</p>
+
+          <h4>{{ "MILEAGE_PERIOD" | trn }}</h4>
+          <p>{{ "DATE_RANGE_DESC" | trn }}</p>
+
+          <h4>{{ "SORTING" | trn }}</h4>
+          <p>{{ "SORTING_DESC" | trn }}</p>
+          <h4>{{ "FILTERING_RESULTS" | trn }}</h4>
+          <p>{{ "FILTERING_DESC" | trn }}</p>
+          
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+      <div ng-hide="userReports.DAILY_MILEAGE_SUMMARY_MULTI_VEHICLE" class="control-group well">
+        <p>Your account does not have permission to view this report. If you believe this is in error, please contact support: {{ userData.support }}</p>
+      </div>
+      
+      <div ng-show="userReports.DAILY_MILEAGE_SUMMARY_MULTI_VEHICLE" class="control-group well">
+        <div id="languageControl-div" show-role='SYSADMIN' class='controls' reports-lang></div>
+        <div id='loadingLocations-reporting' ng-show='!locations && fleet' >
+          <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+          <span translate>Loading Locations</span>...&nbsp;
+          <hr>
+        </div>         
+        <div ng-show="locations" class="controls">
+          <h3 class="report-label" id="locationSelect-label">{{ "LOCATION" | trn}}</h3>
+          <select v-chosen class="location-input" ng-model="url.busEntId" id="locationDropdown-select">
+            <option value="" translate>-- Choose a Location --</option>
+            <option ng-repeat="location in locations" ng-selected="location.busEntId == url.busEntId" value="{{location.busEntId}}">{{location.businessName}}</option>
+          </select>
+          <hr>
+        </div>
+                
+        <form id="rangeType" name="rangeType" class="form-inline" ng-submit="getReport()">
+
+          <h3 class="report-label" id="reportPeriod-label">{{ "REPORT_PERIOD"| trn }}</h3>
+         
+          <div id="exportableDateRange" style="display:inline">
+            <span ng-show="url.range">
+              <input reports-pickadate='url.start' name='startDate' id='pickaStartDate'/>
+              <label for="endDate" class="label-inline ng-binding" id="to">to&nbsp;&nbsp;&nbsp;</label>
+              <input reports-pickadate='url.end' name='endDate' id='pickaEndDate'/>
+            </span>
+          </div>
+
+          <span class="hidden-phone hidden-tablet" ng-hide="url.range">Last</span> <input ng-hide="url.range" class="input-mini inline" ng-model="url.days" name="days" id="daysPrior-input" type="text" placeholder="Last __ Days"> <span class="hidden-phone hidden-tablet" ng-hide="url.range">&nbsp;Days</span>
+
+          <input type="checkbox" name="range" id="range" ng-model="url.range" style="margin-left:10px" /> Date Range
+        </form>
+        <hr>  
+
+        <div reports-max-input='url.max' name="max"></div>
+
+        <div ng-if="url.vehicleId || fleet" class="control-group" id="generate-report">
+
+          <a class="btn btn-primary" ng-click="getReport()">{{ "VIEW_MILEAGE_REPORT" | trn}}</a>
+
+          <a class="btn btn-primary" ng-hide="report.noResults.length > 1" ng-href="/telematics/rest/reporting/fleet/{{url.busEntId}}/dailysummary/export?{{ url | param: shallow}}" target="_blank">{{ "EXPORT_AS_CSV" | trn }}</a>
+        </div>
+
+        
+        <div ng-if="report || reportLoading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || reportLoading, 'alert-danger': report.noResults.length > 1}">
+          <div id='reportLoading' ng-show='reportLoading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              <span translate>Loading Report...&nbsp;</span>
+          </div>
+          <div ng-show="report">
+            <div ng-show="!report.noResults">
+              <strong>{{ "REPORT_PERIOD" | trn }}</strong>: {{header.startDate}} - {{header.endDate}}</span>
+              <hr ng-show="totals">
+              <span ng-show="totals.tripMileageTotal"><strong>{{ "TOTAL_MILEAGE" | trn}}</strong>: {{totals.tripMileageTotal | number:2 || "0"}} {{totals.vehicleUom}}<br></span>
+              <span ng-show="totals.tripMileageTotal"><strong>Total Drive Time</strong>: {{totals.tripMinutesTotal | number:0 || "0"}} minutes<br></span>
+              <span ng-show="totals.tripCountTotal"><strong>{{ "TOTAL_TRIPS" | trn}}</strong>: {{totals.tripCountTotal | number:0 || "0"}}<br></span>
+              <span ng-show="totals.hardBrakingCountTotal"><strong><span translate>Hard Braking Count</span></strong>: {{totals.hardBrakingCountTotal | number:0 || "0"}}<br></span>
+              <span ng-show="totals.hardAccelerationCountTotal"><strong><span translate>Hard Acceleration Count</span></strong>: {{totals.hardAccelerationCountTotal | number:0 || "0"}}<br></span>
+            </div>
+            <div ng-show="!report.noResults && summary" id="reporting-vehicleTotals">
+
+              <hr>
+              <span class="xpand" ng-click='expandVehicleSummaries = !expandVehicleSummaries'><i class="icon-plus-sign" ng-class="{'icon-plus-sign': expandVehicleSummaries == false,'icon-minus-sign': expandVehicleSummaries == true}" ></i> <strong>Report Totals by Vehicle</strong></span>
+              <span ng-show="expandVehicleSummaries"> - Click any column header to sort results by that column's data.</span>
+              <table ng-show="expandVehicleSummaries" class="reportingSummary-vehicleTotals">
+                <thead>
+                  <tr>
+                    <th class="sortable" ng-click="sortSummary.by = 'vehicleNickname || year'; sortSummary.reverse=!sortSummary.reverse">Vehicle</th>
+                    
+                    <th class="sortable" ng-click="sortSummary.by = 'tripCountTotal'; sortSummary.reverse=!sortSummary.reverse">Trips</th>
+                    
+                    <th class="sortable" ng-click="sortSummary.by = 'tripMileageTotal'; sortSummary.reverse=!sortSummary.reverse">Mileage</th>
+                    
+                    <th class="sortable" ng-click="sortSummary.by = 'tripMinutesTotal'; sortSummary.reverse=!sortSummary.reverse">Drive Time</th>
+                    
+                    <th class="sortable" ng-click="sortSummary.by = 'hardAccelerationCountTotal'; sortSummary.reverse=!sortSummary.reverse">Hard Accels</th>
+                    
+                    <th class="sortable" ng-click="sortSummary.by = 'hardBrakingCountTotal'; sortSummary.reverse=!sortSummary.reverse">Hard Brakes</th>
+                    
+                    <th></th>
+                  
+                  </tr>
+                </thead>
+                <tbody ng-repeat="vs in summary | orderBy: sortSummary.by : sortSummary.reverse">
+                  <tr>
+                    <td>{{vs.vehicleNickname}} <span ng-show="vs.vehicleNickname"> - </span> {{vs.year}} {{vs.makeDesc}} {{vs.modelDesc}} ({{vs.engineDesc}})</td>
+                    <td style="text-align:right">{{vs.tripCountTotal}}</td>
+                    <td style="text-align:right">{{vs.tripMileageTotal | number:2}} {{vs.vehicleUom}}</td>
+                    <td style="text-align:right">{{vs.tripMinutesTotal | number:1}} min</td>
+                    <td style="text-align:right">{{vs.hardAccelerationCountTotal}}</td>
+                    <td style="text-align:right">{{vs.hardBrakingCountTotal}}</td>
+                    <td>{{vs.notes}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}</div>
+            <span ng-show="notes && !report.noResults"><hr><strong>Notes</strong>: {{notes}}</span>
+          </div>
+        </div>
+      </div><!--end control group-->
+
+      
+
+      <div ng-if='report && !report.noResults && userReports.DAILY_MILEAGE_SUMMARY_MULTI_VEHICLE' class='control-group' id="quick-search">
+        <label for="orderSearch" class="label-inline">{{ "FILTER_RESULTS_BY" | trn}}:</label>
+        <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder='{{ "FILTER_RESULTS_PLACEHOLDER" | trn}}'>
+
+        <div class='reports-visibility dropdown pull-right'>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span translate>Show / Hide Columns</span></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li ng-repeat='col in columns' ng-init='ch = hide[col.columnKey]'>
+              <a href ng-click='toggleColumn(col.columnKey)' ng-class="{'hidden-column': hide[col.columnKey]}">
+                <i class='icon-eye-open' ng-hide='hide[col.columnKey]'></i>
+                <i class='icon-eye-close' ng-show='hide[col.columnKey]'></i>
+                <span ng-bind='{{ col.trnKey | trn }}'></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+
+      <table ng-if="report && userReports.DAILY_MILEAGE_SUMMARY_MULTI_VEHICLE" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+
+            <th ng-hide='hide.date' style="width:75px;" class="sortable" th-sort-icon="$sortDate" >{{ "DATE" | trn }}</th>
+
+            <th ng-hide='hide.tripsTotal' class="sortable" th-sort-icon="tripsTotal" style="width:75px" translate>Trips</th>
+
+            <th ng-hide='hide.tripNumberFirst' class="sortable hidden-phone hidden-tablet" th-sort-icon="tripNumberFirst" style="width:75px">{{ "TRIP_NUMBERS" | trn }}</th>
+            
+            <th ng-hide='hide.tripMileage' class="sortable" th-sort-icon="tripMileage" style="width:75px">{{ "DISTANCE" | trn }}</th>
+
+            <th ng-hide='hide.tripDurationMinutes' class="sortable hidden-phone" th-sort-icon='tripDurationMinutes' translate>Trip Length (Minutes)</th>
+
+            <th ng-hide='hide.hardAccelerationCount' class="sortable hidden-phone" th-sort-icon="hardAccelerationCount" style="width:75px">{{ "HARD_ACCEL" | trn }}</th>
+
+            <th ng-hide='hide.hardBrakingCount' class="sortable hidden-phone" th-sort-icon="hardBrakingCount" style="width:75px">{{ "HARD_BRAKE" | trn }}</th>
+
+            <th ng-hide='hide.vehicleNickname' class="sortable" th-sort-icon="vehicleNickname || modelDesc">{{ "VEHICLE" | trn }}</th>
+          </tr>
+        </thead>
+        <tbody ng-repeat="day in report | filter:filter.text | orderBy: sort.by : sort.reverse | limitTo: limitToHack">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+            <td ng-hide='hide.date'>{{day.date}}</td>
+            <td ng-hide='hide.tripsTotal'>{{day.tripsTotal}}</td>
+            <td ng-hide='hide.tripNumberFirst' class="hidden-phone hidden-tablet"><a ng-href="/carcare/vehicles/trip_report.jsp?vid={{day.vehicleId}}&tripId={{day.tripNumberFirst}}" target="_self">{{day.tripNumberFirst}}</a> - <a ng-href="/carcare/vehicles/trip_report.jsp?vid={{day.vehicleId}}&tripId={{day.tripNumberLast}}" target="_self">{{day.tripNumberLast}}</a></td>
+            <td ng-hide='hide.tripMileage' class="column-highlight">{{day.tripMileage | number:2}} {{day.distanceUom}}</td>
+            <td ng-hide='hide.tripDurationMinutes' class="hidden-phone">{{day.tripDurationMinutes | number:1}}</td>
+            <td ng-hide='hide.hardAccelerationCount' class="hidden-phone">{{day.hardAccelerationCount}}</td>
+            <td ng-hide='hide.hardBrakingCount' class="hidden-phone">{{day.hardBrakingCount}}</td>
+            <td ng-hide='hide.vehicleNickname'><a ng-href="/carcare/vehicles/vehicle_detail.jsp?vid={{day.vehicleId}}" target="_self"><span class="vehicleNick-reports">{{day.vehicleNickname}}</span> {{day.year}} {{day.makeDesc}} {{day.modelDesc}} <span ng-if="day.engineDesc">({{day.engineDesc}})</span></a></td>
+          </tr>
+        </tbody>
+      </table>
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

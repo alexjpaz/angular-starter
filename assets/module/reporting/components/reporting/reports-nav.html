@@ -1,0 +1,24 @@
+<div class="row-fluid padding-top">
+  <div class="span12 full">
+	<div id="reports-nav" class="well" style="text-align:center">
+	  
+	  <a ng-show="userReports.TRIP_LOG_SINGLE_VEHICLE" href="/carcare/reporting/export/trip-log" class="btn btn-primary reportingNav-button" ><i class="icon-file-text"></i><br><span class="reports-nav_label">{{ "TRIP_LOG" | trn}}: {{ "VEHICLE" | trn }}</span></a>
+	  
+	  <a ng-show="userReports.TRIP_LOG_MULTI_VEHICLE" href="/carcare/reporting/export/trip-log_location" class="btn btn-primary reportingNav-button" ><i class="icon-sitemap"></i><br><span class="reports-nav_label">{{ "TRIP_LOG" | trn}}: {{ "LOCATION" | trn }}</span></a>
+	  
+	  <a ng-show="userReports.DAILY_MILEAGE_SUMMARY_SINGLE_VEHICLE" href="/carcare/reporting/export/mileage" class="btn btn-primary reportingNav-button" ><i class="icon-truck"></i><br><span class="reports-nav_label">{{ "MILEAGE" | trn }}: {{ "VEHICLE" | trn }}</span></a>
+	  
+	  <a ng-show="userReports.DAILY_MILEAGE_SUMMARY_MULTI_VEHICLE" href="/carcare/reporting/export/mileage_fleet" class="btn btn-primary reportingNav-button"><i class="icon-building"></i><br><span class="reports-nav_label">{{ "MILEAGE" | trn }}: {{ "LOCATION" | trn }}</span></a>
+	  
+	  <a ng-show="userReports.ODOMETER_LOG" href="/carcare/reporting/export/odometer" class="btn btn-primary reportingNav-button"><i class="icon-dashboard"></i><br><span class="reports-nav_label">{{ "ODOMETER_LOG" | trn}}</span></a>
+	  
+	  <a ng-show="userReports.ALERTS_SINGLE_VEHICLE" href="/carcare/reporting/export/alerts" class="btn btn-primary reportingNav-button"><i class="icon-comment-alt"></i><br><span class="reports-nav_label">{{"ALERT_REPORT" | trn }}</span></a>
+	  
+	  <a ng-show="userReports.LAST_ALERT_LAST_TRIPLOG"  href="/carcare/reporting/export/last-alert" class="btn btn-primary reportingNav-button"><i class="icon-comments-alt"></i><br><span class="reports-nav_label">Last Alert</span></a>
+	  
+	  <a ng-show="userReports.VEHICLE_LIST" href="/carcare/reporting/export/vehicle-list" class="btn btn-primary reportingNav-button"><i class="icon-list-alt"></i><br><span class="reports-nav_label">Vehicle List</span></a>
+
+	</div>
+  </div>
+</div>
+  

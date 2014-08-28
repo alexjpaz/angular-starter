@@ -1,0 +1,25 @@
+<div class='block'>
+	<div class='block-heading'>
+		<h2>{{ blockTitle }}</h2>
+		<div class='pull-right'>
+			<block-menu></block-menu>
+		</div>
+	</div>
+	<div class='tab-section'>
+		<div class='tabbable tabs-left'>
+			<ul class="nav nav-tabs" ng-class='{ "nav-stacked": isMobile}'>
+				<li ng-repeat='l in links'
+					id='{{l.id}}'
+					nav-active='l'
+					show-any-role='l.role'>
+					<a href-nav='l.href'>{{ l.text }}</a>
+				</li>
+			</ul>
+			<div class='tab-content'>
+				<div class='tab-pane active'>
+					<block-content></block-content>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

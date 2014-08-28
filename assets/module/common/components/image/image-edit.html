@@ -1,0 +1,38 @@
+<div class='image-edit'>
+	<div class='image-edit__progress'>
+		<ul>
+			<li ng-class="{1: 'active'}[step]" ng-click='gotoStep(1)'>1. Select</li>
+			<li ng-class="{2: 'active'}[step]" ng-click='gotoStep(2)'>2. Edit</li>
+			<li ng-class="{3: 'active'}[step]" ng-click='gotoStep(3)'>3. Upload</li>
+		</ul>
+	</div>
+	<div class='image-edit__content'>
+		<div ng-if='step == 1'>
+			<p>Please select a file to edit</p>
+			<input type="file" ng-file-select="onFileSelect($files)" />
+		</div>
+		<div ng-if='step == 2'>
+			<p>To crop this image, drag the region below and then click "Crop"</p>
+			<div class='image-edit__crop'>
+				<div class='image-edit__crop-input image-edit__photo'>
+					<div img-crop='imgCropOptions'></div>
+				</div>
+				<div class='image-edit__crop-preview image-edit__photo'>
+					<img ng-src='{{ destImageUrl }}' />
+				</div>
+			</div>
+
+			<button ng-click='gotoStep(1)' class='btn btn-link'>choose another file</button>
+			<button ng-click='gotoStep(3)' class='btn btn-primary pull-right'>Crop Image</button>
+		</div>
+		<div ng-if='step == 3'>
+			<p>Please confirm the image is correct before uploading.</p>
+			<div class='image-edit__final image-edit__photo'>
+				<img ng-src='{{ destImageUrl }}' />
+			</div>
+			<div>
+			<button ng-click='upload(destImageUrl)' class='btn btn-primary btn-large'>Finish & Upload</button>
+		</div>
+		</div>
+	</div>
+</div>

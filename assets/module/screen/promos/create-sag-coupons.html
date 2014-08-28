@@ -1,0 +1,195 @@
+<style>
+  .input-mini.couponType-dropdown {width:86px}
+  .coupon-contents {padding-top:10px}
+  .input-small.couponValue-input {width:48px}
+  .input-mini.pickadate2 {width:186px}
+  .inputXL-DropdownFlush {width:230px}
+  .input-xlarge {width:220px}
+  .coupon-shell.twoColumn-preview {width:39%}  
+  .form-horizontal .form-actions {background:none;padding-left:156px;padding-right:0;width: 245px; border:none}
+  .input-mini.pickadate2 {
+    background-color: transparent;
+    border: medium none;
+    box-shadow: none;
+    cursor: text;
+    width: 69px
+  }
+  .pickerButton {float:left; margin-right: 6px}
+</style>
+<div class="screen-create-sag-coupons"><!--begin controller div-->
+  <block-tab links='promos' block-title="Promotions">
+    <div ng-if="page.error" class="alert alert-danger" style="padding-right: 14px;"><i class="icon-remove pull-right closeAlert" ng-click="page.error = false"></i><p ng-bind-html="page.errorMessage"></p><p ng-if="urLOL.edit && !url.coupon.couponCanBeModified && url.coupon.couponType !== 'MFG'"><a ng-click="editLive()" style="cursor:pointer">Click Here</a> to suspend the coupon and create an editable copy</span></div>
+    
+    <div ng-if="page.actionSuccess.suspended" class="alert alert-success"><i class="icon-remove pull-right closeAlert" ng-click="page.actionSuccess.suspended = false"></i><i class="icon-thumbs-up"></i> Coupon Successfully Suspended</div>
+
+    <div ng-hide='page.create'>
+
+      <h3 class="bebas-header">Create Coupon from Trigger Template<a show-role='SYSADMIN' id='export-sags' class='pull-right btn btn-warning' href='/telematics/rest/sag/export/all'><i class='icon icon-download'></i> Export Data To CSV</a></h3>
+      
+      <p>Trigger Templates help you run promotions relevant to a vehicle's current health. Coupons created from Trigger Templates will <em>only</em> display to users with "triggering" Maintenance Operations or recent DTC's that are linked to that Trigger Template.</p>
+      <p>For example, if a user has an oil change in their Upcoming Maintenance, they'll see any coupons you create using the Trigger Template for "Oil Change Special", driving them to your store or service center. This allows you to run <em>very</em> targeted promotions!</p>
+      <div common-help tagged="promo-admin, coupon-creation"  faq-title="FAQ: Create Coupon"></div>
+    </div>
+
+    <div ng-if='sag && !page.create' class='control-group' id="quick-search">
+      <hr>
+      <div>
+        <input ng-model="filter.text" class="exportable search-query" name="orderSearch" id="orderSearch" type="text" placeholder="Filter by any word, date, etc">
+      </div>
+    </div>
+    <div ng-show='page.create'> 
+    <!--<pre>{{url.coupon}}</pre>-->
+      <form id="createBySAG" name="createBySag" class="form-horizontal" style="float:left; margin-right:16px" ng-submit='submit()'>
+        <h3 class="bebas-header">{{page.action}} {{page.couponType}}<!--<span ng-hide='mfg'>for SAG</span>--><!--<select ng-model="url.sagSelect" ng-options="g.sagDesc for g in sag"></select>--></h3>
+        <div class="control-group">
+            <label for="sagDropdown">Trigger Template</label>
+            <div class="controls">
+            <select ng-model="url.sagSelect" 
+                    ng-options="g as g.sagDesc for g in sag track by g.sagId"
+                    ng-disabled="page.disabledInput"
+                    name="sagSelect" 
+                    id="sagSelect" 
+                    class="inputXL-DropdownFlush" 
+                    >
+            </select> <span class="required-star">&lowast;</span>
+           </div>
+        </div>
+        
+        <div class="control-group">
+            <label for="startDate">Start Date</label>
+            <div class="controls">
+             <input ng-disabled="page.disabledInput" ng-show="page.disabledInput" name='startDate' id='startDate' ng-model='url.coupon.startDate' style="width: 220px"/> 
+             <input ng-hide="page.disabledInput" name='startDate' id='startDate' common-pickadate='url.coupon.startDate' required/> <span class="required-star">&lowast;</span>
+           </div>
+        </div>
+        <div class="control-group">
+            <label for="endDate">End Date</label>
+            <div class="controls">
+              <input ng-hide="page.disabledInput" name='endDate' id='endDate' common-pickadate='url.coupon.endDate' required /><input ng-disabled="page.disabledInput" ng-show="page.disabledInput" name='endDate' id='endDate' ng-model='url.coupon.endDate' style="width: 220px" /> <span class="required-star">&lowast;</span>
+           </div>
+        </div>
+        <div class="control-group">
+          <label for="couponDesc">Coupon Title</label>
+          <div class="controls">
+            <input ng-disabled="page.disabledInput" type="text" id="couponDesc" name="couponDesc" ng-model="url.coupon.couponDesc" class="input-xlarge" maxlength="50" placeholder="Coupon Title" required /> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="couponText">Coupon Short Description</label>
+          <div class="controls">
+            <textarea ng-disabled="page.disabledInput" class="input-xlarge" name="couponText" ng-model="url.coupon.couponText" id="couponText" maxlength="120" placeholder="Coupon Short Description" required></textarea>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="couponCode">Coupon Code</label>
+          <div class="controls">
+            <input ng-disabled="page.disabledInput" type="text" id="couponCode" name="couponCode" ng-model="url.coupon.couponCode" class="input-xlarge" maxlength="12" placeholder="Coupon Code"  required/> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="couponValue">Coupon Value</label>
+          <div class="controls">
+            <select ng-disabled="page.disabledInput" id="couponPercentOrValue" name="couponPercentOrValue" class="input-mini percentDollar-dropdown" ng-model='url.coupon.couponPercentOrValue' style="width:41px">
+                    <option value="$">$</option>
+                    <option value="%">%</option>
+            </select> <input ng-disabled="page.disabledInput" type="text" id="couponValue" name="couponValue" class="input-small couponValue-input" maxlength="3" placeholder="Value" ng-model="url.coupon.couponValue" required /> <span>&nbsp;OFF&nbsp;</span> <select id="couponLaborPartOrTotal" ng-model="url.coupon.couponLaborPartOrTotal" ng-disabled="page.disabledInput" name="couponLaborPartOrTotal" class="input-mini couponType-dropdown">
+                <option value="PARTS" selected>PARTS</option>
+                <option value="LABOR">LABOR</option>
+                <option value="TOTAL">TOTAL</option>
+            </select> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        <!--<div class="control-group">
+          <label for="couponLaborPartOrTotal">Coupon Type</label>
+          <div class="controls">
+            
+          </div>
+        </div>-->
+        
+        <div class="form-actions">
+          <!--<button ng-hide="page.mfg && urLOL.edit || !url.coupon.couponCanBeModified" class="btn btn-primary" type="submit" id="add_coopin">{{page.dynamicButton1}}</button>-->
+          <button ng-hide="page.hideSubmit" class="btn btn-primary" type="submit" id="add_coopin">{{page.dynamicButton1}}</button>
+          <button ng-hide='urLOL.edit' class="btn btn-primary" id="all_sags" ng-click="sagView()"><i class="icon-reply"></i> Templates</button>
+          <span ng-show='urLOL.edit' class="btn btn-primary" id="my_coupons" ng-click="myCoupons()"><i class="icon-reply"></i> My Coupons</span>
+        </div>
+      </form>
+
+      <div ng-hide='reportLoading' id="coupon-container" class="coupon-shell twoColumn-preview" ng-class="{'mfg-coupon': url.coupon.couponType == 'MFG', 'couponA': url.coupon.cssStyle == 'couponA', 'couponB': url.coupon.cssStyle == 'couponB','couponC': url.coupon.cssStyle == 'couponC', 'couponD': url.coupon.cssStyle == 'couponD', 'couponE': url.coupon.cssStyle == 'couponE'}" style="float:left">
+        
+        <div id="coupon" class="coupon-outer">
+          <div class="coupon-inner">
+            <div class="coupon-contents create-preview">
+              <div ng-hide="url.coupon.couponType == 'MFG'" class="btn-group couponStyler">
+                  <button class="btn btn-mini" ng-class="{'active':url.coupon.cssStyle == 'couponA'}" ng-click="url.coupon.cssStyle = 'couponA'" title="Select Coupon Style: A">A</button>
+                  <!--<button class="btn btn-mini" ng-class="{'active':url.coupon.cssStyle == 'couponE'}" ng-click="url.coupon.cssStyle = 'couponE'" title="Select Coupon Style: E">E</button>-->
+                  <button class="btn btn-mini" ng-class="{'active':url.coupon.cssStyle == 'couponB'}" ng-click="url.coupon.cssStyle = 'couponB'" title="Select Coupon Style: B">B</button>
+                  <button class="btn btn-mini" ng-class="{'active':url.coupon.cssStyle == 'couponC'}" ng-click="url.coupon.cssStyle = 'couponC'" title="Select Coupon Style: C">C</button>
+                  <button class="btn btn-mini" ng-class="{'active':url.coupon.cssStyle == 'couponD'}" ng-click="url.coupon.cssStyle = 'couponD'" title="Select Coupon Style: D">D</button>     
+              </div>
+              <div class="couponLogo-container">
+                <img ng-repeat="logo in url.coupon.couponMfgs" ng-src="{{ logo.logoUrl}}">
+                <img ng-show="!url.coupon.couponMfgs.0.logoUrl && url.coupon.couponType !== 'MFG'" ng-src="//s3.amazonaws.com/bucketimgs3{{Session.applicationBranding.affiliationLogo}}.png">
+                <!--<img ng-show="!url.coupon.couponMfgs.0.logoUrl && page.mfg" src="//s3.amazonaws.com/bucketimgs3/shared/img/promos/gates/promo-logo.png">-->
+              </div>
+              <h4>Valid {{url.coupon.startDate || "##/##/##"}} through {{url.coupon.endDate || "##/##/##"}}</h4>
+              <h1 title='{{url.coupon.couponDesc || "Coupon Title" }}' class='hideOverflow'>{{url.coupon.couponDesc || "Coupon Title" }}</h1>
+              <h3 title='{{url.coupon.couponText || "Coupon Short Description" }}' class='hideOverflow'>{{url.coupon.couponText || "Coupon Short Description" }}</h3>
+              <p class="offering-party">Redeem at: <br>
+              <span style="font-size:1.5em">Jake's Independent Garage</span><br>5820 Delphi Drive<br>Troy, MI 48098<br>USA</p>
+              <div>
+                <p style="text-align:center;font-style:italic;font-size:8pt;">Coupon Code: {{url.coupon.couponCode || "SAMPLC0D3"}} / <span ng-show='!url.coupon.couponValue'>Sample Coupon:</span><span ng-show="url.coupon.couponPercentOrValue !== '%' ">{{url.coupon.couponPercentOrValue || "$"}}</span> {{url.coupon.couponValue || "__"}} <span ng-show="url.coupon.couponPercentOrValue == '%' ">{{url.coupon.couponPercentOrValue || "$"}}</span> OFF {{url.coupon.couponLaborPartOrTotal || "Example" }}
+                <br>Note: coupon only good at offering business unless otherwise specified.</p>
+              </div>
+            </div><!-- coupon-contents -->
+          </div><!--coupon-inner-->
+        </div><!-- coupon-outer -->
+      </div><!-- coupon-container coupon-shell-->
+
+      
+      
+
+    </div><!--end coupon creator-->
+
+    <table ng-hide='page.create' id="orders_report" class="table table-striped table-bordered" >
+      <thead>
+        <tr>
+          <th class='sortable' th-sort-icon='sagDesc' nowrap>Trigger Template</th>
+          <th class='sortable' th-sort-icon='sagDtcs'>Linked DTC's</th>
+          <th class='sortable' th-sort-icon='sagMaintOps'>Linked Maintenance</th>
+          <th class='non-sortable'  style="width:110px"></th>
+        </tr>
+      </thead>
+      <tbody class="hoverBody" ng-repeat="group in sag | filter:filter.text | orderBy: sort.by : sort.reverse">
+        <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'" ng-class="{'expandedRootRow': group.sagDtcs.show == true || group.sagMaintOps.show == true}">
+          <td><strong>{{group.sagDesc}}</strong></td>
+          <td><span class="xpand linkStyle" ng-show="group.sagDtcs" ng-click="group.sagDtcs.show = !group.sagDtcs.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.sagDtcs.show == false,'icon-minus-sign': group.sagDtcs.show == true}" ></i> View {{group.sagDtcs.length}} Linked DTCs</span></td>
+          <td><span class="xpand linkStyle" ng-show="group.sagMaintOps" ng-click="group.sagMaintOps.show = !group.sagMaintOps.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.sagMaintOps.show == false,'icon-minus-sign': group.sagMaintOps.show == true}" ></i> View {{group.sagMaintOps.length}} Linked Operations</span></td>
+          <td style="width:110px"><a class="btn btn-primary" ng-click="createView(group.sagId)">Create Coupon</a></td>
+        </tr>
+        <tr class='expandedRow' ng-repeat="dtc in group.sagDtcs" ng-show="group.sagDtcs.show">
+          <td colspan="12" style="padding:0px">
+            <table>
+              <tr>
+                <td><i class="icon-chevron-right"></i> <strong>DTC {{dtc.dtcNumber}}</strong>: {{dtc.dtcShortDesc}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class='expandedRow' ng-repeat="op in group.sagMaintOps" ng-show="group.sagMaintOps.show">
+          <td colspan="12" style="padding:0px">
+            <table>
+              <tr>
+                <td><i class="icon-chevron-right"></i> <strong>OP ID: {{op.operationId}}</strong>: {{op.operationName}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id='reportLoading' ng-show='reportLoading && !sag && !page.create' >
+        <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+        <span translate>Loading Trigger Templates...&nbsp;</span>
+    </div>
+	  
+  </block-tab>
+</div>

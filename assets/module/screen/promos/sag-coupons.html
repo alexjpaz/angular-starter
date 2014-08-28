@@ -1,0 +1,59 @@
+<div class="screen-sag-coupons"><!--begin controller div-->
+  <block-tab links='promos' block-title="{{page.title}}">
+
+    <h3>Service Alert Groups <a show-role='SYSADMIN' id='exportsags' class='pull-right btn btn-warning' href='#'><i class='icon icon-download'></i> Export Data To CSV</a></h3>
+    
+    <p>Service Alert Groups (SAG) help you run promotions based on a user's recent DTC's and Upcoming Maintenance. Creating a SAG Coupon gives you the ability to <em>only</em> show that coupon to users with Maintenance Operations or recent DTC's in the Service Alert Group. This allows you to run <em>very</em> targeted promotions!</p>
+    <p>For example, if a user has an oil change in their Upcoming Maintenance, they'll see any coupons you create under the SAG "Oil Change Special", driving them to your store or service center!</p>
+
+    <div ng-if='sag' class='control-group' id="quick-search">
+      <hr>
+      <div>
+        <label for="orderSearch" class="label-inline" >Filter Results by:</label>
+        <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder="any vehicle ID, word, number, etc">
+      </div>
+    </div>
+
+    <table id="orders_report" class="table table-striped table-bordered" >
+      <thead>
+        <tr>
+          <th class='sortable' th-sort-icon='sagDesc' nowrap>Service Alert Group (SAG)</th>
+          <th class='sortable' th-sort-icon='sagDtcs'>Linked DTC's</th>
+          <th class='sortable' th-sort-icon='sagMaintOps'>Linked Maintenance</th>
+          <th class='non-sortable'  style="width:140px"></th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="group in sag | filter:filter.text | orderBy: sort.by : sort.reverse">
+        <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'" ng-class="{'expandedRootRow': group.sagDtcs.show == true || group.sagMaintOps.show == true}">
+          <td><strong>{{group.sagDesc}}</strong></td>
+          <td><span class="xpand" ng-show="group.sagDtcs" ng-click="group.sagDtcs.show = !group.sagDtcs.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.sagDtcs.show == false,'icon-minus-sign': group.sagDtcs.show == true}" ></i> View {{group.sagDtcs.length}} Linked DTCs</span></td>
+          <td><span class="xpand" ng-show="group.sagMaintOps" ng-click="group.sagMaintOps.show = !group.sagMaintOps.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.sagMaintOps.show == false,'icon-minus-sign': group.sagMaintOps.show == true}" ></i> View {{group.sagMaintOps.length}} Linked Operations</span></td>
+          <td style="width:140px"><a class="btn btn-primary" href="/carcare/promos/create_coupon.jsp?sag=1" target="_self">Create SAG Coupon</a></td>
+        </tr>
+        <tr class='expandedRow' ng-repeat="dtc in group.sagDtcs" ng-show="group.sagDtcs.show">
+          <td colspan="12" style="padding:0px">
+            <table>
+              <tr>
+                <td><i class="icon-chevron-right"></i> <strong>DTC {{dtc.dtcNumber}}</strong>: {{dtc.dtcShortDesc}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class='expandedRow' ng-repeat="op in group.sagMaintOps" ng-show="group.sagMaintOps.show">
+          <td colspan="12" style="padding:0px">
+            <table>
+              <tr>
+                <td><i class="icon-chevron-right"></i> <strong>OP ID: {{op.operationId}}</strong>: {{op.operationName}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id='reportLoading' ng-show='reportLoading && !sag' >
+        <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+        <span translate>Loading Service Alert Groups...&nbsp;</span>
+    </div>
+	  
+  </block-tab>
+</div>

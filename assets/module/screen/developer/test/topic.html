@@ -1,0 +1,28 @@
+
+<div>
+	<h1>Example Topic (CSV)</h1>
+	
+	<p>This is an example of <a link-topic='what-is-a-csv'>an inline link</a> for a topic.</p>
+
+	<p>This is an example of <a link-topic-tag='what-is-a-csv'>an inline link</a> for a topic <em>tag</em>.</p>
+
+	<p>You can also have a <a topic-popover='what-is-a-csv'>popover</a> for the same link</p>
+
+	<p>You can also have a <dfn topic-tooltip='what-is-a-csv'>toolip</dfn> for the same link</p>
+
+	<p>Using the <code>topic</code> directive allows you to create a custom template for a topic</p>
+	<button ng-click='showExample1 = !showExample1'>What is CSV?</button>
+
+	<div topic='what-is-a-csv' ng-if='showExample1' style='border: 4px dashed green; padding: 20px;'>
+		<div style='color: red'>{{ topic.title }}</div>
+		<div ng-bind-html='topic.content'></div>
+	</div>
+
+	<button ng-click='showExample1 = !showExample1'>CSV Tags</button>
+	<div topic-list='what-is-a-csv' ng-if='showExample1' style='border: 4px dashed green; padding: 20px;'>
+		<div ng-repeat='t in topics'>
+			<div style='color: red'>{{ t.title }}</div>
+			<div ng-bind-html='t.content'></div>
+		</div>
+	</div>
+</div>

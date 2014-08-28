@@ -1,0 +1,46 @@
+<div class="screen-call-center-usa-index"><!--begin controller div-->
+  <style>
+    #reports-nav {text-align:center !important}
+    .shop_info, .shop_img_wrapper {display:none}
+  </style>
+  <block>
+    <h2 style="text-align:center" translate>Support: USA Call Center</h2>
+    <table class="table table-striped table-bordered" id="supportIndex">
+      <thead>
+        <th style="width:150px">{{ trans.REPORT | trn }}</th>
+        <th><span translate>Description</span></th>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="/support/usa/user-lookup"><i class="icon-user"></i>&nbsp; User Lookup &amp; Password Reset</a></td>
+          <td>This utility allows you to lookup a user by login id, email, phone, or last name. You can verify their identity using their security questions, and if necessary reset their current password and have a temporary password sent to their primary email address.</td>
+        </tr>
+        <tr>
+          <td><a href="/support/usa/delayed-alerts"><i class="icon-time"></i>&nbsp; Receiving Delayed Alerts</a></td>
+          <td>This utility analyzes the various communication nodes involved in sending an alert to help diagnose why a user might be receiving delayed alerts and attempts to offer possible causes and solutions.</td>
+        </tr>
+        <tr>
+          <td><a href="/support/admin/alert_receipt_v2.jsp" target="_self"><i class="icon-ban-circle"></i>&nbsp; Not Receiving Alerts</a></td>
+          <td>This utility runs a series of checks to help diagnose why a user isn't receiving an alert (or alerts) and, if available, provides a recommended action &amp; url to resolve the issue.</td>
+        </tr>
+        <tr>
+          <td><a href="/support/admin/light_troubleshooter_v2.jsp" target="_self"><i class="icon-lightbulb"></i>&nbsp; Troubleshooting: Device Lights</a></td>
+          <td>This utility asks which device lights are on, off, or blinking to attempt to diagnose if the device is functioning as expected and provide recommendations to improve device communication or functionality.</td>
+        </tr>
+        <tr>
+          <td><a href="/carcare/help/device_troubleshoot.jsp" target="_self"><i class="icon-signal"></i>&nbsp; Troubleshooting Device</a></td>
+          <td>This utility asks a number of questions to troubleshoot device issues that can prevent normal functioning including connection and communication problems. It includes light checking v1 and asks additional questions about whether the device has a clear line of sight. <em>This version is in the help section in production.</em></td>
+        </tr>
+        <tr>
+          <td><a href="/support/admin/dtc_check.jsp" target="_self"><i class="icon-ok-sign"></i>&nbsp; DTC Check</a></td>
+          <td>This utility can be used to check if Delphi's DTC server is experiencing problems or not. Enter a valid DTC to see it's name and description. If you enter code P0301 and do not get results, Delphi's DTC Translation Service may be down. This utility can also be used to look up the raw descriptions of various DTC's.</em></td>
+        </tr>
+        <!--<tr>
+          <td style="width:150px"><a href="/delphi/admin/missing-maintenance"><i class="icon-calendar"></i>&nbsp; Missing Maintenance Schedules</a></td>
+          <td>This utility generates a report of vehicles without maintenance schedules.</td>
+        </tr>-->
+      </tbody>
+    </table>
+  </block>
+
+</div><!-- end controller div-->

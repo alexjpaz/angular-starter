@@ -1,0 +1,62 @@
+<div class="screen-print-coupon"><!--begin controller div-->
+  <block>
+    <div ng-if="url.coupon.startDate" ng-hide='reportLoading' id="coupon-container" class="coupon-shell printCoupon" ng-class="{'coupon-expired':(url.coupon.$endDate < currentTimeUnix) || (url.coupon.$startDate > currentTimeUnix), 'mfg-coupon': url.coupon.couponType == 'MFG', 'couponA': url.coupon.cssStyle == 'couponA', 'couponB': url.coupon.cssStyle == 'couponB','couponC': url.coupon.cssStyle == 'couponC', 'couponD': url.coupon.cssStyle == 'couponD', 'couponE': url.coupon.cssStyle == 'couponE'}" >
+      <div ng-hide="error" id="coupon" class="coupon-outer">
+        <div class="coupon-inner">
+          <div class="coupon-contents coupon-status">
+                <hr>
+                <h1>Coupon Status: {{url.coupon.couponUiStatus}}</h1>
+                <!--<h1 ng-hide='((url.coupon.$endDate) && (url.coupon.$endDate < currentTimeUnix))'>Coupon Status: Active</h1>-->
+                <!--<h1 ng-show='((url.coupon.$endDate) && (url.coupon.$endDate < currentTimeUnix))'>Coupon Status: Inactive</h1>-->
+                <p class="center">
+                  <!--<span ng-show='((url.coupon.$endExposureDate) && (url.coupon.$endExposureDate < currentTimeUnix))'>Exposures Ended on {{coupon.$endExposureDate * 1000 | date:'MM/dd/yy'}}.<br></span>-->
+                  <span ng-show='url.coupon.$endDate < currentTimeUnix'>Coupon Expired on {{url.coupon.$endDate * 1000 | date:'MM/dd/yy'}}.</span>
+                  <span ng-show='url.coupon.$startDate > currentTimeUnix'>Promotion Starts on {{url.coupon.$startDate * 1000 | date:'MM/dd/yy'}}.</span>
+                </p>
+                <hr>
+                <!--<p class="couponSAG center">
+                  <span>Coupon Triggered By "<a ng-href="/carcare/promos/create-sag-coupons?sag={{coupon.sagId}}">{{coupon.sagDesc}}</a>"</span>
+                  <span ng-show="coupon.couponMfgs.0.logoUrl || coupon.couponType === 'MFG'"><br>Manufacturer: {{coupon.couponMfgs.0.brandLabel || "Gates"}}</span>
+                </p>-->
+
+              </div>
+          <div ng-if='(url.coupon.$endDate > currentTimeUnix) || (url.coupon.$startDate < currentTimeUnix)' class="coupon-contents create-preview">
+            <div class="couponLogo-container">
+              <img ng-repeat="logo in url.coupon.couponMfgs" ng-src="{{ logo.logoUrl}}">
+              <img ng-show="!url.coupon.couponMfgs.0.logoUrl && url.coupon.couponType !== 'MFG'" ng-src="//s3.amazonaws.com/bucketimgs3{{Session.applicationBranding.affiliationLogo}}.png">
+              <!--<img ng-show="!url.coupon.couponMfgs.0.logoUrl && url.coupon.couponType === 'MFG'" src="//s3.amazonaws.com/bucketimgs3/shared/img/promos/gates/promo-logo.png">-->
+            </div>
+            <h4>Valid {{url.coupon.startDate || "##/##/##"}} through {{url.coupon.endDate || "##/##/##"}}</h4>
+            <h1 title='{{url.coupon.couponDesc || "Coupon Title" }}' >{{url.coupon.couponDesc || "Coupon Title" }}</h1>
+            <h3 title='{{url.coupon.couponText || "Coupon Short Description" }}' >{{url.coupon.couponText || "Coupon Short Description" }}</h3>
+            <div class="offering-party">
+              <span style="font-size:14pt; font-weight:bold">Coupon Recipient: <span ng-if="Session.servicingLocations[0].businessName">{{Session.firstName}} {{Session.lastName}}</span><span ng-if="!Session.servicingLocations[0].businessName">Customer Name</span> </span>
+              <span style="font-size:10pt"><br>{{vehicleInfo.year}} {{vehicleInfo.makeDesc || "Year/Make/Model of Customer Vehicle" }} {{vehicleInfo.modelDesc}} / vin: {{vehicleInfo.vin || "############"}}</span>
+              <span style="font-size:14pt; font-weight:bold"><br><br>Redeem at: {{Session.servicingLocations[0].businessName || promoAdmin.shop.businessName}}</span>
+              <span style="font-size:10pt">
+                <br>
+                <span ng-if="Session.servicingLocations[0].addressLine1">{{Session.servicingLocations[0].addressLine1}} / {{Session.servicingLocations[0].addressLine2}}</span>
+                <span ng-if="!Session.servicingLocations[0].addressLine1">{{promoAdmin.shop.address}} {{promoAdmin.shop.address2}} / {{promoAdmin.shop.city}}, {{promoAdmin.shop.stateProv}}&nbsp;&nbsp;{{promoAdmin.shop.postalCode}}</span>
+              </span>
+            </div>
+            <div>
+              <p class="fine-print">Coupon Code: {{url.coupon.couponCode || "SAMPLC0D3"}} / <span ng-show='!url.coupon.couponValue'>Sample Coupon:</span><span ng-show="url.coupon.couponPercentOrValue !== '%' ">{{url.coupon.couponPercentOrValue || "$"}}</span> {{url.coupon.couponValue || "__"}} <span ng-show="url.coupon.couponPercentOrValue == '%' ">{{url.coupon.couponPercentOrValue || "$"}}</span> OFF {{url.coupon.couponLaborPartOrTotal || "Example" }}
+              <br>Note: coupon only good at offering business unless otherwise specified. Coupon may only be redeemed by "Coupon Recipient" if specified</p>
+              <p ng-show="url.coupon.couponFinePrint" class="fine-print">Additional Fine Print: {{url.coupon.couponFinePrint}}</p>
+            </div>
+          </div><!-- coupon-contents -->
+        </div><!--coupon-inner-->
+      </div><!-- coupon-outer -->
+    </div><!-- coupon-container coupon-shell-->
+    <div ng-if="url.coupon.startDate" ng-hide='(url.coupon.$endDate < currentTimeUnix) || (url.coupon.$startDate > currentTimeUnix)' class="coupon-controls noprint well" style="text-align:center; font-size: 30px">
+      <a ng-click="print()" title="Print Coupon"><i class="icon-print"></i><br><span style="font-size: 9pt; margin-top: 0px;">Print Coupon</span></a>
+    </div>    
+
+    <div id='reportLoading' ng-show='reportLoading' >
+        <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+        <span translate>Loading Coupon...&nbsp;</span>
+    </div>
+    <div ng-if="!url.coupon.startDate" class="alert alert-danger">We're sorry, but there was an error while retrieving that coupon. If you believe you are seeing this message in error, contact support: {{Session.supportNumbers[Session.languageCode]}}</div>
+	  
+  </block>
+</div>

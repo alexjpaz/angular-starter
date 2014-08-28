@@ -1,0 +1,6 @@
+<div class="reports-instructions instructions-container">    
+	<h2 ng-click='showInstructions = !showInstructions'>
+		<i class="icon-plus-sign" ng-class="{'icon-plus-sign': showInstructions == false,'icon-minus-sign': showInstructions == true}" ></i> 
+		<span ng-bind='reportsInstructions'></span></h2>
+	<div class="instructions" ng-show='showInstructions' ng-transclude></div>
+</div>

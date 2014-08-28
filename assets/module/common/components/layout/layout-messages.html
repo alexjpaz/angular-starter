@@ -1,0 +1,23 @@
+<div class="row-fluid message-container" ng-show='showMessages && messages.length > 0'>
+	<div class="system-alert span12" >
+		<div class="alert medium noradius clearfix parent"
+			 ng-repeat='m in messages | limitTo:messageLimit'
+			 ng-init='m.$showBody = false'>
+			<span class="alert-inner">
+				<i class="icon-info-sign"></i>&nbsp;&nbsp;
+				<span class="message-title">{{ m.messageTitle }}</span>
+				<div class="message-body" ng-show='m.$showBody'>{{ m.messageBody }}</div>
+			</span>
+			<a href class="close" ng-click='closeMessages()'>×</a>
+			<span class="pull-right label">
+				<a ng-click='showBody(m)' href><i ng-class="{'false':'icon-plus','true':'icon-minus'}[m.$showBody]"></i>  more </a> 
+			</span>
+		</div>
+	</div>
+	<style>
+
+	.system-alert .medium {
+		background-color:#39B3D7;
+	}
+	</style>
+</div>

@@ -1,0 +1,15 @@
+
+.screen-vehicle-image-thumbnail__image--large {
+	max-width: 400px;
+	max-height: 400px;
+}
+
+.screen-vehicle-image-thumbnail__image--mid {
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.screen-vehicle-image-thumbnail__image--small {
+	max-width: 45px;
+	max-height: 45px;
+}

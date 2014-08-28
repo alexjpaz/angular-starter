@@ -1,0 +1,57 @@
+<div class='screen-help-topic-edit'>
+	<block-tab block-title='Editing {{ topic.id }}' links='help'>
+		<form>
+			<p><strong>Title:</strong> The "Title" is the descriptive title you want displayed to the user. When you enter this, the javascript will automatically convert this title into a topic id - you don't have to manually enter a topic id.<br><strong>Tags:</strong> You may enter as many tags as you want, just make sure to separate tags with commas. If you're making a multi-word tag, use hyphens to separate the words (ex: tag-one, tag-two-is-longer, tag-three).<br><strong>Content: </strong>The "content" is the FAQ content you want displayed to the user. You may include html.</a></p>
+		<fieldset>
+			<input type="text" ng-model='topic.title' placeholder="Title (e.g. What is csv?)" class='input--topic-title' />
+			<input type="text" ng-model='topic.id' placeholder="topic-id auto-generated, but editable" />
+			<input type="text" ng-model='topic.$tagsString' placeholder="tags (comma separated, hypens for spaces between words)" style="width:360px" />
+		</fieldset>
+		<fieldset class='fieldset--content'>
+			<legend>Content</legend>
+			<div>
+				<div class='row-fluid'>
+					<div class='span6'>
+						<label>Content</label>
+						<textarea ng-model='topic.content' placeholder='FAQ content you want displayed to the user. You may include html for links, paragraphs, or formatting. Example HTML Paragraph: &lt;p&gt;A sample paragraph. All html must have an opening and closing tag.&lt;/p&gt;  A Sample Link: &lt;a href=&quot;/carcare/help/topic&quot;&gt;A Sample Link - shouldn&apos;t include &quot;vehimatics.com&quot;&lt;/a&gt;  To make bold: &lt;strong&gt;enclose word or phrase in strong tags&lt;/strong&gt;.  To italicize: &lt;em&gt;enclose word in em (emphasis) tags&lt;/em&gt;'></textarea>
+					</div>
+
+					<div class='span6'>
+						<label>Content Preview</label>
+						<div class='content__preview' ng-bind-html='sanitizedContent'></div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class='fieldset--formats'>
+				<legend>Formats</legend>
+				<div ng-repeat='(key,value) in topic.formats' class='row-fluid'>
+					<div class='span6'>
+						<label>{{ key }}</label>
+						<div ng-switch="key">
+							<textarea ng-switch-when="modal" ng-model='topic.formats[key]' placeholder="Content that is shown in modal windows"></textarea>
+							<textarea ng-switch-when="toolip" ng-model='topic.formats[key]' placeholder="Content that is shown on tooltips"></textarea>
+							<textarea ng-switch-default ng-model='topic.formats[key]' placeholder="Content for &quot;{{ key }}&quot; format"></textarea>
+						</div>
+					</div>
+					<div class='span6'>
+						<label>{{ key }} preview</label>
+						<div class='content__preview' ng-bind-html='sanitizedContentFormats[key]'></div>
+					</div>
+				</div>
+				<div class='fieldset__action'>
+					<select ng-options='f for f in formats' ng-model='newFormat'>
+						<option value=''>-- Select Format --</option>
+					</select>
+					<button class='btn btn-primary' ng-click='addFormat(newFormat)' ng-disabled='topic.formats[newFormat] != null'><i fa='plus'>Add Format</i></button>
+				</div>
+			</fieldset>
+			<div class='form-actions'>
+				<button type="submit" class="btn btn-primary" ng-click='save()'>Save Topic</button>
+				<button type="submit" class="btn btn-danger"  ng-click='remove()'>Remove Topic</button>
+			</div>
+			<div class='alert alert-danger' ng-if='error'>
+				Error saving
+			</div>
+		</form>
+	</block-tab>
+</div>

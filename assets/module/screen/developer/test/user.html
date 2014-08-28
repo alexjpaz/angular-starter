@@ -1,0 +1,10 @@
+		<block block-title='Currently logged in user'>
+			<block-menu>
+				<a ng-href='#/user/{{ currentUser.personId }}' class='btn btn-small'><i class='icon-edit'></i></a>
+			</block-menu>
+			<block-content>
+				<a href='#/admin/support/alert-receipt'>Troubleshoot</a>
+				<pre>{{ currentUser | json }}</pre>
+			</block-content>
+		</block-x>
+

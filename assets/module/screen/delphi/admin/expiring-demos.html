@@ -1,0 +1,117 @@
+<style>
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-expiring-demo-devices"><!--begin controller div-->
+  <block>
+      <div class="instructions-container">    
+
+        <h2>Delphi Reporting: Expiring Demo Devices</span></h2>
+        <p class="intro" >This utility can be used to generate a Report of all Demo Devices expiring within a user-specified period of time. By default, the report will generate a report of expired devices and all devices expiring in 30 days.</p>
+
+      </div><!--end instructions container -->
+      
+      <div class="control-group well">
+        
+        <form id="rangeType" name="rangeType" class="form-inline" ng-submit="getReport()">
+
+          <h3 class="report-label" id="reportPeriod-label">Report Period</h3>
+          <input class="input-mini inline" ng-model="url.highDays" name="highDays" id="daysPrior-input" type="text" placeholder="Days Left"> Days Left 
+          <input type="checkbox" style="margin-left: 20px; margin-top: 0px" ng-model="url.getExpired" id="getExpired" name="getExpired">&nbsp;&nbsp;Include expired devices?
+        </form>
+        <hr>  
+        <p>Generate a report of Demo Devices that expire during the specified Report Period, and optionally extend packages <em>with 30 days or less till expiration</em>.</p>
+        
+        <div ng-if="url.highDays" class="control-group" id="generate-report">
+
+          <a class="btn btn-primary" ng-click="getReport()" >View Devices</a>
+
+          <a class="btn btn-primary" ng-href="/telematics/rest/package/packages/expiring/export?{{ url | param: shallow}}" target="_blank">Export as CSV</a>
+        </div>
+        <div ng-if="report || loading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || loading, 'alert-danger': report.noResults.length > 1}">
+          <div id='loading' ng-show='loading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              Loading Devices...
+          </div>
+          <div ng-show="report">
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}<br></div>
+            <strong>Report</strong>: {{totalDevices}} Demo Devices that expire in {{url.highDays}} Days or are currently expired.<br>
+            <strong>Note</strong>: Demo Packages with <em>more</em> than 90 days till expiration may not be extendable at this time.
+          </div>
+        
+        </div>
+      </div><!--end control group-->
+      
+
+      <div ng-if='report && !report.noResults' class='control-group' id="quick-search">
+        <label for="orderSearch" class="label-inline" >Filter results by:</label>
+        <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder="any trip#, date, word, number, etc">
+      </div>
+
+      <table ng-if="report" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            <th class="sortable" ng-class="{'asc': sort.by == 'daysLeft' && sort.reverse == true, 'desc': sort.by == 'daysLeft' && sort.reverse == false}" ng-click="sort.by = 'daysLeft'; sort.reverse=!sort.reverse ">Days Left</th>
+            <th class="sortable" ng-class="{'asc': sort.by == '$sortPackageStartDate' && sort.reverse == true, 'desc': sort.by == '$sortPackageStartDate' && sort.reverse == false}" ng-click="sort.by = '$sortPackageStartDate'; sort.reverse=!sort.reverse ">Demo<br>Started</th>
+            <th class="sortable" ng-class="{'asc': sort.by == '$sortPackageEndDate' && sort.reverse == true, 'desc': sort.by == '$sortPackageEndDate' && sort.reverse == false}" ng-click="sort.by = '$sortPackageEndDate'; sort.reverse=!sort.reverse ">Demo<br>Expires</th>
+            <th class="sortable" ng-class="{'asc': sort.by == 'ratePlan' && sort.reverse == true, 'desc': sort.by == 'ratePlan' && sort.reverse == false}" ng-click="sort.by = 'ratePlan'; sort.reverse=!sort.reverse ">Rate Plan</th>
+            <th class="sortable" ng-class="{'asc': sort.by == 'packageName' && sort.reverse == true, 'desc': sort.by == 'packageName' && sort.reverse == false}" ng-click="sort.by = 'packageName'; sort.reverse=!sort.reverse ">Package</th>
+            <!--<th class="sortable" ng-class="{'asc': sort.by == 'parts' && sort.reverse == true, 'desc': sort.by == 'parts' && sort.reverse == false}" ng-click="sort.by = 'parts'; sort.reverse=!sort.reverse ">Parts</th>-->
+            <!--<th class="sortable" ng-class="{'asc': sort.by == 'subscriberId' && sort.reverse == true, 'desc': sort.by == 'subscriberId' && sort.reverse == false}" ng-click="sort.by = 'subscriberId'; sort.reverse=!sort.reverse ">Subscriber ID</th>-->
+            <th class="sortable" ng-class="{'asc': sort.by == 'vehicleId' && sort.reverse == true, 'desc': sort.by == 'vehicleId' && sort.reverse == false}" ng-click="sort.by = 'vehicleId'; sort.reverse=!sort.reverse ">VID</th>
+            <th class="sortable" ng-class="{'asc': sort.by == 'vehicleOwnerId' && sort.reverse == true, 'desc': sort.by == 'vehicleOwnerId' && sort.reverse == false}" ng-click="sort.by = 'vehicleOwnerId'; sort.reverse=!sort.reverse ">Vehicle<br>Owner</th>
+            <th class="sortable" ng-class="{'asc': sort.by == 'deviceId' && sort.reverse == true, 'desc': sort.by == 'deviceId' && sort.reverse == false}" ng-click="sort.by = 'deviceId'; sort.reverse=!sort.reverse ">Device ID</th>
+            <th class="sortable" ng-class="{'asc': sort.by == 'customerId' && sort.reverse == true, 'desc': sort.by == 'customerId' && sort.reverse == false}" ng-click="sort.by = 'customerId'; sort.reverse=!sort.reverse ">Customer</th>
+            <th class="sortable" ng-class="{'asc': sort.by == 'distributor' && sort.reverse == true, 'desc': sort.by == 'distributor' && sort.reverse == false}" ng-click="sort.by = 'distributor'; sort.reverse=!sort.reverse ">Distributor</th>
+            <th class="non-sortable">Vehicle</th>
+            <th class="sortable" th-sort-icon='deviceSerialNo'>Device</th>
+            <th class="non-sortable"></th>
+
+          </tr>
+        </thead>
+        <tbody ng-repeat="device in report | filter:filter.text | orderBy: sort.by : sort.reverse">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+            <td>{{device.daysLeft}}</td>
+            <td>{{device.packageStartDate}}</td>
+            <td>{{device.packageEndDate}}</td>
+            <td>{{device.ratePlan}}</td>
+            <td>{{device.packageName}}</td>
+            <!--<td>{{device.parts}}</td>-->
+            <!--<td>{{device.subscriberId}}</td>-->
+            <td>{{device.vehicleId}}</td>
+            <td>{{device.vehicleOwnerId}}</td>
+            <td>{{device.deviceId}}</td>
+            <td>{{device.customerId}}</td>
+            <td>{{device.distributor}}</td>
+            <td><a ng-href="/carcare/vehicles/vehicle_detail.jsp?vid={{device.vehicleId}}" target="_self"><span ng-show="device.vehicleNickname">"{{device.vehicleNickname}}" - </span> {{device.vehicleText}}</a></td>
+            <td>{{device.deviceSerialNo}}</td>
+            <td ng-class="{'expandButton-td': device.showExpanded === true}"><span ng-show="device.canBeExtended"><button class="btn" ng-class="{'btn-success': device.extendStatus === 'SUCCESS', 'btn-danger': device.extendStatus === 'FAIL'}" style="padding:4px 10px;" ng-click="extendThisDemo(device)">{{device.extendStatus || "Extend"}}</button>
+          </tr>
+          <tr ng-show='device.showExpanded' class="transactionRow">
+            <td colspan="11" style="padding-top:30px">
+              <table class="transaction-report">
+                   
+                <!--<tbody ng-show="order.$noDetails"><tr><td>No Transaction details found for this order.</td></tr></tbody>-->
+                <tbody ng-repeat="response in device.extended">
+                  <tr ng-class="{'alert-success': response.actionStatus === 'SUCCESS','alert-danger': response.actionStatus === 'FAIL'}">
+                    <td class="detailsTD">
+                      <strong>{{response.recordType}} {{response.actionType}}: {{response.actionStatus}}</strong>
+                      <br>Record ID: {{response.recordId}}
+                    </td>
+                    <td class="detailsTD">
+                      <strong>Message</strong>:<br> {{response.message}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

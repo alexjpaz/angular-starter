@@ -1,0 +1,102 @@
+<style>
+.shop_info, .shop_img_wrapper {display:none}
+</style>
+
+<div class="screen-user-lookup"><!--begin controller div-->
+  <block>   
+    <div>     
+      <form id="getUserForm" name="getUserForm" class="form-horizontal" ng-submit='submit()'>
+        <h3>Lookup User Info &amp; Password Reset</h3>
+        <div class="control-group">
+            <label for="sagDropdown">Lookup User by</label>
+            <div class="controls">
+            <select name='lookupSelect'
+                    id='lookupSelect'
+                    ng-model='form.lookupSelect'
+                    ng-options='type as type.label for type in form.lookupMethods'
+                    class='inputXL-DropdownFlush'>
+            </select> <span class="required-star">&lowast;</span>
+           </div>
+        </div>
+        <!--<div ng-hide='form.lookupSelect.value == "default"' class="control-group">
+          <label for="lookupValue">{{form.lookupSelect.label}}</label>
+          <div class="controls">
+            <input type="text" id="lookupValue" name="lookupValue" ng-model="form.lookupValue" class="input-xlarge" maxlength="50" placeholder="Enter {{form.lookupSelect.label}}..." required /> <span class="required-star">&lowast;</span>
+          </div>
+        </div>-->
+        <div ng-show='form.lookupSelect.value == "loginId"' class="control-group">
+          <label for="loginId">{{form.lookupSelect.label}}</label>
+          <div class="controls">
+            <input type="text" id="loginId" name="loginId" ng-model="query.loginId" class="input-xlarge" maxlength="50" placeholder="Enter {{form.lookupSelect.label}}..." /> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        <div ng-show='form.lookupSelect.value == "emailAddress"' class="control-group">
+          <label for="emailAddress">{{form.lookupSelect.label}}</label>
+          <div class="controls">
+            <input type="text" id="emailAddress" name="emailAddress" ng-model="query.emailAddress" class="input-xlarge" maxlength="50" placeholder="Enter {{form.lookupSelect.label}}..." /> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        <div ng-show='form.lookupSelect.value == "lastName"' class="control-group">
+          <label for="lastName">{{form.lookupSelect.label}}</label>
+          <div class="controls">
+            <input type="text" id="lastName" name="lastName" ng-model="query.lastName" class="input-xlarge" maxlength="50" placeholder="Enter {{form.lookupSelect.label}}..." /> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        <div ng-show='form.lookupSelect.value == "phoneNo"' class="control-group">
+          <label for="phoneNo">{{form.lookupSelect.label}}</label>
+          <div class="controls">
+            <input type="text" id="phoneNo" name="phoneNo" ng-model="query.phoneNo" class="input-xlarge" maxlength="50" placeholder="Enter {{form.lookupSelect.label}}..."  /> <span class="required-star">&lowast;</span>
+          </div>
+        </div>
+        
+        
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit" id="add_coopin"><i class="icon-search"></i> {{page.dynamicButton1}}</button>&nbsp;&nbsp;<input ng-hide='!userInfo || userInfo.noResults > 1'  ng-model="filter.text" class="search-query" name="orderSearch" id="orderSearch" type="text" placeholder="Filter by login, name, etc" style="width:140px">
+        </div>
+      </form>
+      <div ng-show="userInfo" ng-hide="user.hide || userInfo.hideOthers && !user.hideOthers" ng-repeat="user in userInfo | filter: filter.text" id="user-info" class="alert" ng-class="{true:'alert-danger', false:'alert-info'}[userInfo.noResults.length > 1]">
+        {{userInfo.noResults}}
+        <button class='btn btn-mini' ng-click="user.hide = !user.hide" ng-hide='userInfo.hideOthers && user.hideOthers || userInfo.noResults.length > 1'><i class="icon-user"></i>&nbsp;Hide User</button>&nbsp;<button ng-hide='userInfo.noResults.length > 1' class='btn btn-mini' ng-click="hideOthers(user)"><i class="icon-group"></i>&nbsp;{{page.dynamicButton2}}</button><br><br>
+        <div ng-hide="userInfo.noResults.length > 1">
+          <h3>{{user.firstName}} {{user.lastName}} - {{user.loginId}}</h3>
+          <strong>Person ID</strong>:{{user.personId}}<br>
+          <strong>Primary Email</strong>: {{user.primaryEmail || "N/A"}}<br>
+          <strong>Phone</strong>: {{user.phoneNo || "N/A"}}<br>
+          <strong>Cell</strong>: {{user.cell || "N/A"}}<br>
+          <strong>Address</strong>: <span ng-show="user.address"><br>{{user.address}}<br></span><span ng-show="user.address2">{{user.address2}}<br></span><span ng-show="user.city">{{user.city}}, </span><span ng-show="user.stateProv">{{user.stateProv}}, </span><span ng-show="user.countryCode">{{user.countryCode || "N/A"}}&nbsp;&nbsp;{{user.postalCode}}</span>
+          <br><br>
+          <strong>Subscriber</strong>: {{user.subscriberInfo.subscriberDesc}}
+          <br><br>
+          <button ng-hide='userInfo.length > 1 && !userInfo || securityInfo' class="btn btn-success" id="viewSecurity" ng-click="viewSecurity(user)"><i class="icon-lock" ng-class="{'icon-lock': user.showSecurity == false,'icon-unlock': user.showSecurity == true}" ></i> View Security Info</button>
+        </div>
+      </div><!-- userInfo-->
+
+      <div id="securityInfo" ng-show='securityInfo' class="alert alert-success" >
+        <h3>Security Info for {{securityInfo.firstName}} {{securityInfo.lastName}} - {{securityInfo.loginId}}</h3>
+        <strong>Password</strong>: {{securityInfo.pwd}}<br>
+        <span ng-show="securityInfo.challengeQuestion"><br><strong>Question 1</strong>: {{securityInfo.challengeQuestion || "N/A"}}</span>
+        <span ng-show='securityInfo.challengeAnswer'><br><strong>Answer 1: {{securityInfo.challengeAnswer || "N/A"}}</strong><br><br></span>        
+        <span ng-show="securityInfo.challengeQuestion2"><strong>Question 2</strong>: {{securityInfo.challengeQuestion2 || "N/A"}}</span>
+        <span ng-show='securityInfo.challengeAnswer2'><br><strong>Answer 2</strong>: {{securityInfo.challengeAnswer2 || "N/A"}}<br><br></span>
+        <span ng-show="securityInfo.challengeQuestion3"><strong>Question 3</strong>: {{securityInfo.challengeQuestion3 || "N/A"}}</span>
+        <span ng-show='securityInfo.challengeAnswer3'><br><strong>Answer 3</strong>: {{securityInfo.challengeAnswer3 || "N/A"}}<br><br></span>
+        <br>
+        <button ng-hide='form.lookupSelect.value == "default" && !userInfo || password.reset' class="btn btn-danger" id="resetPW" ng-click="pwdReset()"><i class="icon-remove-circle"></i> Reset Password</button>
+      </div>
+      <div id="pwdReset" ng-show='password.reset' class="alert alert-danger">
+        <h3>Password Reset for {{securityInfo.firstName}} {{securityInfo.lastName}} - {{securityInfo.loginId}}</h3>
+        <strong>Reset Status: {{resetResponse.actionStatus}}</strong>
+        <div ng-show='resetResponse.actionStatus == "FAIL"'>{{resetResponse.message}}</div>
+        <div ng-show='resetResponse.actionStatus == "SUCCESS"'><br>
+          The user's password has been reset to a temporary password. {{resetResponse.message}}. This temporary password  will expire in 5 days - The user will have to login with the temporary password <em>before</em> it expires and create a new password.
+        </div>
+      </div>
+
+    
+    <div id='reportLoading' ng-show='reportLoading && !userInfo' >
+        <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+        <span translate>Retrieving User Info...&nbsp;</span>
+    </div>
+	  
+  </block>
+</div>

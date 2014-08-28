@@ -1,0 +1,95 @@
+<style>
+  .input-mini.couponType-dropdown {width:86px}
+  .coupon-contents {padding-top:10px}
+  .input-small.couponValue-input {width:48px}
+  .input-mini.pickadate2 {width:186px}
+  .inputXL-DropdownFlush {width:230px}
+  .input-xlarge {width:220px}
+  .coupon-shell.twoColumn-preview {width:39%}  
+  .form-horizontal .form-actions {background:none;padding-left:156px;padding-right:0;width: 245px; border:none}
+  .input-mini.pickadate2 {
+    background-color: transparent;
+    border: medium none;
+    box-shadow: none;
+    cursor: text;
+    width: 69px
+  }
+  .pickerButton {float:left; margin-right: 6px}
+</style>
+<div class="screen-sag-maintenance-categories"><!--begin controller div-->
+  <block-tab links='promos' block-title="Promotions" >
+    
+    <div show-role="SYSADMIN">
+      <div>
+
+        <h3>SAG Maintenance Categories<a show-role='SYSADMIN' id='export-sags' class='pull-right btn btn-warning' href='/telematics/rest/sag/export/all?groupTypeId=3'><i class='icon icon-download'></i> Export Data To CSV</a></h3>
+        
+        <!--<p>Trigger Templates help you run promotions relevant to a vehicle's current health. Coupons created from Trigger Templates will <em>only</em> display to users with "triggering" Maintenance Operations or recent DTC's that are linked to that Trigger Template.</p>
+        <p>For example, if a user has an oil change in their Upcoming Maintenance, they'll see any coupons you create using the Trigger Template for "Oil Change Special", driving them to your store or service center. This allows you to run <em>very</em> targeted promotions!</p>-->
+      </div>
+
+      <div ng-if='sag && !page.create' class='control-group' id="quick-search">
+        <hr>
+        <div>
+          <input ng-model="filter.text" class="exportable search-query" name="orderSearch" id="orderSearch" type="text" placeholder="Filter by any word, date, etc">
+        </div>
+      </div>
+      
+      <table ng-hide='page.create' id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            <th class='sortable' th-sort-icon='sagDesc' nowrap>SAG Maintenance Category</th>
+            <th class='sortable' th-sort-icon='sagDtcs'>Group Types</th>
+            <th class='sortable' th-sort-icon='sagDtcs'>Linked DTC's</th>
+            <th class='sortable' th-sort-icon='sagMaintOps'>Linked Maintenance</th>
+            <!--<th class='non-sortable'  style="width:110px"></th>-->
+          </tr>
+        </thead>
+        <tbody class="hoverBody" ng-repeat="group in sag | filter:filter.text | orderBy: sort.by : sort.reverse">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'" ng-class="{'expandedRootRow': group.sagDtcs.show == true || group.sagMaintOps.show == true}">
+            <td><strong>{{group.sagDesc}}</strong></td>
+            <td><span class="xpand linkStyle" ng-show="group.groupTypes" ng-click="group.groupTypes.show = !group.groupTypes.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.groupTypes.show == false,'icon-minus-sign': group.groupTypes.show == true}" ></i> View {{group.groupTypes.length}} Group Types</span></td>
+            <td><span class="xpand linkStyle" ng-show="group.sagDtcs" ng-click="group.sagDtcs.show = !group.sagDtcs.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.sagDtcs.show == false,'icon-minus-sign': group.sagDtcs.show == true}" ></i> View {{group.sagDtcs.length}} Linked DTCs</span></td>
+            <td><span class="xpand linkStyle" ng-show="group.sagMaintOps" ng-click="group.sagMaintOps.show = !group.sagMaintOps.show"><i class="icon-plus-sign" ng-class="{'icon-plus-sign': group.sagMaintOps.show == false,'icon-minus-sign': group.sagMaintOps.show == true}" ></i> View {{group.sagMaintOps.length}} Linked Operations</span></td>
+            <!--<td style="width:110px"><a class="btn btn-primary" ng-click="createView(group.sagId)">Create Coupon</a></td>-->
+          </tr>
+          <tr class='expandedRow' ng-repeat="type in group.groupTypes" ng-show="group.groupTypes.show">
+            <td colspan="12" style="padding:0px">
+              <table>
+                <tr>
+                  <td><i class="icon-chevron-right"></i> <strong>Group Type</strong>: {{type}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class='expandedRow' ng-repeat="dtc in group.sagDtcs" ng-show="group.sagDtcs.show">
+            <td colspan="12" style="padding:0px">
+              <table>
+                <tr>
+                  <td><i class="icon-chevron-right"></i> <strong>DTC {{dtc.dtcNumber}}</strong>: {{dtc.dtcShortDesc}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class='expandedRow' ng-repeat="op in group.sagMaintOps" ng-show="group.sagMaintOps.show">
+            <td colspan="12" style="padding:0px">
+              <table>
+                <tr>
+                  <td><i class="icon-chevron-right"></i> <strong>OP ID: {{op.operationId}}</strong>: {{op.operationName}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id='reportLoading' ng-show='reportLoading && !sag && !page.create' >
+          <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+          <span translate>Loading SAG Maintenance Categories...&nbsp;</span>
+      </div>
+    </div><!--att only-->
+    <div hide-role="SYSADMIN">
+      <div class="alert alert-danger">Sorry, you are not authorized to access this page.</div>
+    </div><!--non-att access error-->
+	  
+  </block-tab>
+</div>

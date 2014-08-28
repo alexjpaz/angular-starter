@@ -1,0 +1,57 @@
+.image-edit__content {
+	border: 1px solid rgba(0,0,0,0.15);
+	padding: 8px;
+	position: relative;
+}
+
+.image-edit__progress ul {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	list-style: none;
+}
+
+.image-edit__progress li {
+	float: left;
+	width: 200px;
+	background: #aaa;
+	color: #eee;
+	margin-right: 4px;
+	margin-bottom: 12px;
+	line-height: 32px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.image-edit__progress li.active {
+	background: #2592C5;
+}
+
+.image-edit__content {
+	overflow: hidden;
+}
+
+.image-edit__crop {
+	border: 1px solid rgba(0,0,0,0.15);
+	border-radius: 4px;
+	overflow: hidden;
+	background: rgba(37, 146, 197, 0.22);
+	margin-bottom: 8px;
+}
+
+.image-edit__crop-input,
+.image-edit__crop-preview {
+	float: left
+}
+.image-edit__final {
+	display: inline-block;
+}
+
+.image-edit__photo {
+	margin: 4px 0px 4px 4px;
+	padding: 4px;
+	background: #f4f4f4;
+	border: 1px solid rgba(0,0,0,0.15);
+	border-radius: 4px;
+
+}

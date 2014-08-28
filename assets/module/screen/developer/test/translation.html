@@ -1,0 +1,16 @@
+<div class='screen-developer-test-translation'>
+	<block block-title='Change Language'>
+		<div class='well'>
+			<span ng-repeat='li in supportedLanguages'>
+				<a class='btn' ng-click='lang(li.language, li.rtl)'>{{ li.langCode }}</a>
+			</span>
+			<code>Current language: {{ App.config.languageKey }}</code>
+		</div>
+		<h4>'tr' filter Demo</h4>
+		<input type='text' ng-model='text' />
+		<span>{{ text | tr }}</span>
+
+		<h4>'translate' annotate Demo</h4>
+		<p translate>This is a test of the translation service. The date is {{ date }}.</p>
+	</block>
+</div>

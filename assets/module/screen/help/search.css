@@ -1,0 +1,13 @@
+.screen-help-topic-search__results article {
+	padding: 10px 10px 20px 10px;
+
+	border-top: 1px solid #eee;
+}
+
+.screen-help-topic-search__results .edit_button {
+	margin-right:10px;
+}
+
+.screen-help-topic-search .btn--form-fix {
+	margin-bottom: 10px;
+}

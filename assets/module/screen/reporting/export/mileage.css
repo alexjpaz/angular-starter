@@ -1,0 +1,307 @@
+#loading {
+  display:inline-block;
+  margin-left:16px
+}
+
+
+#loadingVehicles-reporting, #loadingLocations-reporting {
+    display: inline-block;
+    margin-left: 0;
+    width: 100%;
+    padding-left:0px
+}
+    
+.instructions span {font-weight:bold}
+.instructions ul {margin-left:18}
+.instructions > .intro {
+    border-bottom: 1px solid #EEEEEE;
+    padding-bottom: 18px
+}
+
+.instructions > h5, h4 {
+    margin-bottom: 0
+}
+
+.form-actions {
+  border-bottom: 1px solid #EEEEEE;
+  border-color: #EEEEEE;
+  padding-bottom: 18px;
+  background-color:#fdfdfd
+}
+
+.instructions-container > h2 {color: #005580}
+.instructions-container > h2:hover {color: #00315E; cursor: pointer}
+
+.xpand {display:inline}
+.xpand.linkStyle {color: #005580}
+.xpand:hover {color: #00315E;cursor:pointer}
+.xpand-row:hover {color: #00315E;cursor:pointer}
+
+.linkStyle_color {color:#005580}
+
+/* 
+
+Copied verbatim from orders.css ++++ TRIM UNNECCESSARY AND OVERLAPPING ELEMENTS
+
+*/
+
+#orders_report {border-left:none;border-right:none}
+#orders_report thead {
+  /*-webkit-box-shadow: 0 0 3px #777777;
+  -moz-box-shadow: 0 0 3px #777777;
+  box-shadow: 0 0 3px #777777;*/
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  /*background-color:#F3F3F3*/
+  background-color:#D5EACE;
+} /* or #EFFFEF */
+#orders_report td.attention {
+  color:#db2c2b;
+  border: 1px solid #953b39;
+  -webkit-box-shadow: 0 0 6px #d59392;
+  -moz-box-shadow: 0 0 6px #d59392;
+  box-shadow: 0 0 6px #d59392
+}
+#orders_report button {padding-left: 0px}
+#orders_report table {width:100%}
+#orders_report.table th {vertical-align: middle; border-bottom: 1px solid #555555}
+
+#loading {
+  display:inline-block;
+  margin-left:16px
+}
+#orderSearch {width:300px}
+#orderSearch.exportable {width:269px}
+
+#orders_report ul {
+  margin-top: 12px
+}
+td > table {
+  width: 100%
+}
+
+
+tr.order > td {/*border-top:1px solid #999*/border-top:1px solid #bbb}
+tr.note > td {border-top:3px double #ccc}
+.note span {font-weight:bold}
+
+.instructions span {font-weight:bold}
+.instructions ul {margin-left:18}
+.instructions > .intro {
+    border-bottom: 1px solid #EEEEEE;
+    padding-bottom: 18px
+}
+
+.instructions > h5, h4 {
+    margin-bottom: 0
+}
+
+.view_details_submit {
+    /*width:116px;*/
+    background-color: transparent;
+    border-width: 0;
+    color: #005580;
+    font-weight: bold
+}
+.view_details_submit:hover {color: #00315E}
+.transaction-report td {
+    border: medium none
+}
+
+
+.transactionRow > td {
+    border-top: 3px double #AAAAAA;
+    padding-bottom: 32px;
+    padding-top: 16px
+}
+
+.transaction-report td + td {border-left:0px;}
+.view_details_submit > i {margin-right: 6px}
+
+
+.form-actions {
+  border-bottom: 1px solid #EEEEEE;
+  border-color: #EEEEEE;
+  padding-bottom: 18px;
+  background-color:#fdfdfd
+}
+
+.instructions-container > h2 {color: #005580}
+.instructions-container > h2:hover {color: #00315E; cursor: pointer}
+
+
+th.sortable {
+  background: url("https://s3.amazonaws.com/bucketimgs3/shared/img/sort_both.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+  padding-right: 20px;
+}
+th.asc {
+  background: url("https://s3.amazonaws.com/bucketimgs3/shared/img/sort_asc.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+  padding-right: 20px;
+}
+th.desc {
+  background: url("https://s3.amazonaws.com/bucketimgs3/shared/img/sort_desc.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+  padding-right: 20px;
+}
+.xpand {display:inline}
+.xpand:hover {color: #00315E;cursor:pointer}
+
+th.sortable:hover, th.desc:hover, th.desc:hover {color:#000;cursor: pointer}
+th.non-sortable:hover {cursor: default}
+
+.viewDetailsCell {width:124px}
+
+.transaction-report td.detailsTD {border:1px solid #ccc !important; background-color:#F0F0F0 !important}
+
+.detailsTD span {font-weight:bold}
+
+.transaction-separator {height:18px}
+
+.reason-details {padding-left:22px}
+
+table tbody, table thead {display: table-header-group !important;}
+
+
+
+h3.report-label {display:inline;margin-right:16px}
+h3#alertTypes-label.report-label{margin-right:45px}
+h3#languageSelect-label.report-label{margin-right:57px !important}
+h3#locationSelect-label.report-label{margin-right:69px !important}
+h3#daysQuiet-label.report-label{margin-right:44px;}
+
+
+input.pickerButton {width:0px !important}
+
+#rangeType input.exportablePickadate-input {width:69px}
+#vidDropdown-select, #vidDropdown_select_chosen {width:495px !important}
+#alertTypeDropdown, #alertTypeDropdown_chosen {width:495px !important}
+
+@media screen and (max-width: 980px) {
+
+  #daysPrior-input {width:206px}
+
+}
+
+@media screen and (max-width: 724px) {
+  h3#reportVehicle-label.report-label, h3#reportPeriod-label.report-label, h3#alertTypes-label.report-label {display:block;line-height: 16px; margin-bottom:0px}
+  #rangeType #to {display:block; margin-top:8px}
+  #rangeType input.lastXDays-input {
+    margin-top:16px;
+    width: 357px
+  }
+
+  
+  #vidDropdown-select, #vidDropdown_select_chosen, #alertTypeDropdown, #alertTypeDropdown_chosen, .periodType-select {width:367px !important; margin-top:16px}
+  #rangeType input#daysPrior-input {margin-top:16px; width:357px; display:block}
+  #rangeType input.exportablePickadate-input { width:326px}
+  #rangeType #pickaStartDate input.pickadateReporting {margin-top:35px !important}
+  
+}
+
+@media screen and (max-width: 480px) {
+  .input-mini, .input-small, .input-medium, .input-large, .input-xlarge, .input-xxlarge {
+    width: 85% !important}
+  h3.report-label {display:block}
+  .label-inline {display:block}
+  #locationDropdown-select, #vidDropdown-select, #vidDropdown_select_chosen, .reports-max-input_select, #alertTypeDropdown, #alertTypeDropdown_chosen, #rangeType .reportPeriod-input, #rangeType .periodType-select, #languageSelect-select {width:100% !important}
+  #rangeType input#daysPrior-input {width:96.5% !important}
+  #rangeType input.lastXDays-input {width: 96.5% !important}
+  #rangeType input.exportablePickadate-input {width:79.5% !important}
+  #orderSearch {width:97.5%}
+}
+
+
+.periodType-select {margin-right:4px !important}
+label.radio.inline {margin-bottom:16px !important; margin-top:8px !important}
+
+#generate-report {margin-top:20px}
+
+.column-highlight {font-weight:bold; background-color:#E8FCE0 !important;font-weight:bold}
+
+.reportRow-even > tr.mainReportRow-row > td {
+    background-color:#eee !important;
+}
+
+tr.mainReportRow-row.reportRow-even > td {
+    background-color:#eee !important;
+}
+
+.reportRow-even > tr.mainReportRow-row > td.column-highlight {
+    background-color:#D5EACE !important;
+}
+
+tr.mainReportRow-row.reportRow-even > td.column-highlight {
+    background-color:#D5EACE !important;
+}
+
+
+
+#exportableReport-summary {margin-top:35px; margin-bottom:0px; padding-top:16px}
+
+input.pickerButton {width:0px !important}
+input.pickerButton.pickadate {
+  min-width:0 !important;
+  cursor:pointer;
+  color:transparent !important;
+  border:1px solid #999;
+  background-position:8px 6px !important
+}
+
+td.expandedExpander-cell {background-color:#fff !important}
+ul.chosen-choices, .chosen-container-single .chosen-single {-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}
+.chosen-container-single .chosen-single {background:#fff;box-shadow:none;border-color:#ccc;height:25px;padding-top:3px}
+.chosen-container-multi .chosen-choices {border-color:#ccc}
+
+.chosen-container-single .chosen-single div {
+  /*background: rgb(242,242,242); 
+  background: -moz-linear-gradient(top,  rgba(242,242,242,1) 0%, rgba(242,242,242,1) 46%, rgba(207,207,207,1) 53%, rgba(207,207,207,1) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(242,242,242,1)), color-stop(46%,rgba(242,242,242,1)), color-stop(53%,rgba(207,207,207,1)), color-stop(100%,rgba(207,207,207,1)));
+  background: -webkit-linear-gradient(top,  rgba(242,242,242,1) 0%,rgba(242,242,242,1) 46%,rgba(207,207,207,1) 53%,rgba(207,207,207,1) 100%);
+  background: -o-linear-gradient(top,  rgba(242,242,242,1) 0%,rgba(242,242,242,1) 46%,rgba(207,207,207,1) 53%,rgba(207,207,207,1) 100%);
+  background: -ms-linear-gradient(top,  rgba(242,242,242,1) 0%,rgba(242,242,242,1) 46%,rgba(207,207,207,1) 53%,rgba(207,207,207,1) 100%); 
+  background: linear-gradient(to bottom,  rgba(242,242,242,1) 0%,rgba(242,242,242,1) 46%,rgba(207,207,207,1) 53%,rgba(207,207,207,1) 100%); 
+  background: -moz-linear-gradient(center top , #F2F2F2 0%, #F2F2F2 46%, #CFCFCF 53%, #CFCFCF 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  border: 1px solid #707070;*/
+  border:none;
+  display: block;
+  height: 16px;
+  padding: 0;
+  position: absolute;
+  right: 4px;
+  top: 5px;
+  width: 16px
+}
+
+.chosen-container-single .chosen-single div b {
+  background: url("/shared/plugins/chosen/chosen-sprite.png") no-repeat scroll 2px -1px rgba(0, 0, 0, 0);
+  /*border: 1px solid #FFFFFF;
+  display: block;
+  height: 14px;
+  width: 14px*/
+}
+
+.dropdown-menu a.hidden-column {color:#999 !important}
+
+.icon-globe.report-globe {font-size:30px}
+.icon-external-link-sign.report-icon {font-size:26px}
+.report-icon {font-size:30px}
+
+
+.reportingSummary-vehicleTotals {margin-top:30px}
+.reportingSummary-vehicleTotals td, th {padding:0px 26px 0px 6px}
+.reportingSummary-vehicleTotals th {text-align:left; padding-bottom: 8px; padding-top:8px}
+.reportingSummary-vehicleTotals th.sortable {background:none}
+
+#rangeType input#range {
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.vehicleNick-reports {font-weight:bold; text-decoration: underline}
+
+.table-bordered tr.expandedRow:first-child > td {border-top: 3px double #777 !important}
+.table-bordered tr.expandedRow:last-child > td {border-bottom: 1px solid #777 !important}
+
+.order.mainReportRow-row.expandedRootRow > td {
+    border-bottom: 3px double #777;
+}

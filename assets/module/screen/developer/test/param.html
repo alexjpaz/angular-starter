@@ -1,0 +1,29 @@
+<div>
+	<block block-title='param filter'>
+	<div ng-init='p = { foo: [], bar: {}, baz: "" }'>
+			<div ng-repeat='a in [0,1,2]'>
+				<label>foo[{{a}}]</label>
+				<input type='text' ng-model='p.foo[a]' />
+			</div>
+			<div>
+				<label>bar.a</label>
+				<input type='text' ng-model='p.bar.a' />
+			</div>
+			<div>
+				<label>bar.b</label>
+				<input type='text' ng-model='p.bar.b' />
+			</div>
+			<div>
+				<label>baz</label>
+				<input type='text' ng-model='p.baz' />
+			</div
+			<div>
+				<label>shallow copy</label>
+				<input type='checkbox' ng-model='shallow' />
+			</div>
+			<pre>p = {{ p | json }}</pre>
+			<h5>Output</h5>
+			<pre>/some/url?{{ p | param:shallow }}</pre>
+		</div>
+	</block>
+</div>

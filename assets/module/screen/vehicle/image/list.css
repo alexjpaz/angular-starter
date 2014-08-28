@@ -1,0 +1,61 @@
+.vehicle-image-list__gallery {
+	min-height: 45px;
+	background: #eee;
+	margin-bottom: 20px;
+	border-radius: 8px;
+	padding: 10px;
+	overflow: hidden;
+	position: relative;
+}
+
+.vehicle-image-list__gallery img {
+	max-height: 130px;
+	max-width: 130px;
+}
+
+
+.vehicle-image-list__images {
+	margin-left: -4px;
+}
+
+.vehicle-image-list__image {
+	float: left;
+	margin-left: 4px;
+}
+
+.vehicle-image-list__toolbar {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 8px;
+}
+
+.vehicle-image-list__image {
+	position: relative;
+}
+
+.vehicle-image-list__image i {
+	position: absolute;
+	top: 0;
+	right: 0;
+
+}
+
+
+.vehicle-image-list__image:hover i {
+	visibility: visible;
+}
+
+.vehicle-image-list__image i {
+	cursor: pointer;
+	visibility: hidden;
+}
+
+.vehicle-image-list__image.ng-enter, .vehicle-image-list__image.ng-leave {
+  -webkit-transition:0.2s linear all;
+  transition:0.2s linear all;
+}
+
+.vehicle-image-list__image.ng-leave-active {
+	opacity: 0;
+}

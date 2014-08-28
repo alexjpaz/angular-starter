@@ -1,0 +1,38 @@
+		<block block-title='Input Example'>
+			<form name='form'>
+				<div class='control-group' ng-class="{'error': form.$error.email}">
+					<label>Email</label>
+					<div class='controls'>
+						<input type='email' ng-model='formData.email' name='email' />
+					</div>
+					<span>Angular provides validation for email</span>
+
+				</div>
+				<div class='control-group' ng-class="{'error': form.$error.phone}">
+					<label>SMS</label>
+					<div class='controls'>
+						<input type='tel' ng-model='formData.phone' input-phone />
+					</div>
+					<code>value = {{ formData.phone }}</code>
+					<span>Custom phone directive via input-phone</span>
+					<p>Accepts</p>
+					<ol>
+						<li>XXXXXXXXXX</li>
+						<li>(XXX) XXX-XXXX</li>
+						<li>+X (XXX) XXX-XXXX</li>
+					</ol>
+				</div>
+				<div class='control-group' ng-class="{'error': form.$error.phone}">
+					<label>SMS</label>
+					<div class='controls'>
+						<select ng-options='mp as mp.providerName for mp in Enum.mobileproviders' ng-model='formData.mobileprovider'>
+							<option value='Other'></option>
+						</select>
+						</br>
+						<code>{{ formData.mobileprovider }}</code>
+						<pre>{{ Enum | json }}</pre>
+					</div>
+				</div>
+			</form>
+		</block>
+

@@ -1,0 +1,167 @@
+<style>
+  .block {overflow: visible}
+  .block-content {overflow:auto}
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-last-alert-report"><!--begin controller div-->
+  <div reports-nav></div>
+  <block style="overflow:auto">
+      <div class="instructions-container">    
+
+        <h2 ng-click='hideInstructions = !hideInstructions'><i class="icon-minus-sign" ng-class="{'icon-plus-sign': hideInstructions == true,'icon-minus-sign': hideInstructions == false}" ></i> {{ "REPORTING" | trn }}: <span translate>Last Alert</span></h2>
+        <div class="instructions" ng-show='!hideInstructions'>
+          <p class="intro" style="border-bottom:none;" translate>This report displays all vehicles that have a telematics device with a current telematics package and includes the last alert and trip log received for each vehicle in the report. The report can either be displayed in your browser or exported to a CSV (Comma Separated Value) file that can be opened using a spreadsheet program like Microsoft Excel.</p>
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+      <div ng-hide="userReports.LAST_ALERT_LAST_TRIPLOG" class="control-group well">
+        <p>Your account does not have permission to view this report. If you believe this is in error, please contact support: {{ userData.support }}</p>
+      </div>
+      
+      <div ng-show="userReports.LAST_ALERT_LAST_TRIPLOG" class="control-group well">
+        <div id="languageControl-div" show-role='SYSADMIN' class='controls' reports-lang></div>
+        <h3 class="report-label" id="daysQuiet-label">Days Quiet</h3>
+        <input class="input-mini inline lastXDays-input" ng-model="url.daysQuiet" name="daysQuiet" id="daysQuiet" type="text" placeholder="# of Days">
+        <p>Only includes vehicles that have have "been quiet" and not received alerts for the last 3 days by default. To see "Last Alerts" for all current vehicles, change "Days Quiet" to 0.</p>
+        <hr>
+        <!--<h3 class="report-label">Include Last Trip Log</h3><input type="checkbox" ng-model="url.includeLastTripLog"><br> May increase loading time.
+        <hr>-->
+        <div class="control-group" id="generate-report">
+          
+          <a class="btn btn-primary" ng-click="getReport()"><span translate>View Report</span></a>
+
+          <a class="btn btn-primary" ng-href="/telematics/rest/reporting/vehicle/list/lastalert/export?{{ url | param: shallow}}" target="_blank">{{ "EXPORT_AS_CSV" | trn }}</a>
+          
+
+        </div>
+        <div ng-if="report || reportLoading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || reportLoading, 'alert-danger': report.noResults.length > 1}">
+          <div id='reportLoading' ng-show='reportLoading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              <span>{{ "LOADING" | trn}}...&nbsp;<em>Depending on the number of vehicles, this report may take 30-60 seconds to finish loading</em></span>
+          </div>
+          <div ng-show="report">
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}<br></div><br ng-if="!fleet && !vehicleList ">
+            <strong><span translate>Total Vehicles in Report</span></strong>: {{report.length}}<br>
+            <span ng-show="notes"><strong><span translate>Notes</span></strong>: {{notes}}</span>
+          </div>
+        </div>
+      </div><!--end control group-->
+
+
+		<!-- hide/show columns -->
+	  <div ng-if='report && !report.noResults && userReports.LAST_ALERT_LAST_TRIPLOG' class='control-group' id="quick-search">
+		  <div>
+			  <label for="orderSearch" class="label-inline" >{{ "FILTER_RESULTS_BY" | trn}}:</label>
+			  <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder="any vehicle ID, word, number, etc">
+		    
+        <div class='reports-visibility dropdown pull-right'>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span translate>Show / Hide Columns</span></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li ng-repeat='col in columns' ng-init='ch = hide[col.columnKey]'>
+              <a href ng-click='toggleColumn(col.columnKey)' ng-class="{'hidden-column': hide[col.columnKey]}">
+                <i class='icon-eye-open' ng-hide='hide[col.columnKey]'></i>
+                <i class='icon-eye-close' ng-show='hide[col.columnKey]'></i>
+                <span ng-bind='{{ col.trnKey | trn }}'></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+		  
+	  </div>
+  
+      <table ng-if="report && userReports.LAST_ALERT_LAST_TRIPLOG" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            <th show-role='SYSADMIN'>Troubleshoot Alerts</th>
+            <th show-role='SYSADMIN' class="sortable" th-sort-icon="subscriberId">Subscriber ID</th>
+
+            <th ng-hide='hide.vehicleNickname' class="sortable" th-sort-icon="vehicleNickname || year">{{ "VEHICLE" | trn}}</th>
+            
+            <th ng-hide='hide.vehicleId' class="sortable" th-sort-icon="vehicleId">{{ "VEHICLE_ID" | trn}}</th>
+
+            <th ng-hide='hide.alertType' class="sortable" th-sort-icon="alertType">Last Alert</th>
+
+            <th ng-hide='hide.lastAlertDate' class="sortable" th-sort-icon="$sortLastAlertDate">Last Alert Date</th>
+
+            <th ng-hide='hide.daysSinceLastAlert' class="sortable" th-sort-icon="daysSinceLastAlert">Days Since Last Alert</th>
+            
+            <th ng-hide='hide.tripLogSchedule' class="sortable" th-sort-icon="tripLogSchedule">Trip Log Schedule</th>
+
+            <th ng-hide='hide.lastTripLogRecordDate' class="sortable" th-sort-icon="$sortLastTripLogRecordDate">Last Trip Log Date</th>
+
+            <th ng-hide='hide.daysSinceLastTripLogRecord' class="sortable" th-sort-icon="daysSinceLastTripLogRecord">Days Since Last Trip Log</th>
+
+            <th ng-hide='hide.vehicleOwnerName' class="sortable" th-sort-icon="vehicleOwnerName">Owner</th>
+            
+            <th ng-hide='hide.packageDesc' class="sortable" th-sort-icon="packageDesc"><span translate>Package</span></th>
+            
+            <th ng-hide='hide.packageStartDate' class="sortable" th-sort-icon="$sortPackageStartDate"><span translate>Package Start<span></th>
+            
+            <th ng-hide='hide.packageExpireDate' class="sortable" th-sort-icon="$sortPackageExpireDate"><span translate>Package Expires<span></th>
+
+            <th ng-hide='hide.activationStatusDesc' class="sortable" th-sort-icon="activationStatusDesc">{{ "STATUS" | trn}}</th>
+
+            <th ng-hide='hide.demoDevice' class="sortable" th-sort-icon="demoDevice"><span translate>Demo?</span></th>
+
+            <th ng-hide='hide.vin' class="sortable" th-sort-icon="vin">{{ "VIN" | trn}}</th>
+                     
+            <th ng-hide='hide.deviceSerialNo' class="sortable" th-sort-icon="deviceSerialNo"><span translate>Device Serial</span></th>
+
+            <th ng-hide='hide.deviceSoftwareVersion' class="sortable" th-sort-icon="deviceSoftwareVersion"><span translate>Software</span></th>
+
+            <th class="non-sortable" translate>Notes</th>
+            
+          </tr>
+        </thead>
+        <tbody ng-repeat="v in report | filter:filter.text | orderBy: sort.by : sort.reverse | limitTo: limitToHack">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+            
+            <td show-role='SYSADMIN' style="text-align:center"><a ng-href="/support/admin/alert_receipt_v2.jsp?vehicleId={{v.vehicleId}}&alertType=TRIP"><i class="icon-zoom-in report-icon"></i></a></td>
+            
+            <td show-role='SYSADMIN'>{{v.subscriberId}}</td>
+
+            <td ng-hide='hide.vehicleNickname'><a ng-href="/carcare/vehicles/vehicle_detail.jsp?vid={{v.vehicleId}}" target="_self"><span class="vehicleNick-reports">{{v.vehicleNickname}}</span> <span ng-show="v.vehicleNickname"> - </span> {{v.year}} {{v.makeDesc}} {{v.modelDesc}} {{v.engineDesc}}</a></td>
+            
+            <td ng-hide='hide.vehicleId'>{{v.vehicleId}}</td>
+            <td ng-hide='hide.alertType'>{{v.alertType}}</td>
+            <td ng-hide='hide.lastAlertDate' class="column-highlight">{{v.lastAlertDate}} {{v.lastAlertTime}}</td>
+            <td ng-hide='hide.daysSinceLastAlert' class="column-highlight">{{v.daysSinceLastAlert}}</td>           
+            <td ng-hide='hide.tripLogSchedule' class="column-highlight">{{v.tripLogSchedule}}</td>
+            <td ng-hide='hide.lastTripLogRecordDate' class="column-highlight">{{v.lastTripLogRecordDate}} {{v.lastTripLogRecordTime}}</td>
+            <td ng-hide='hide.daysSinceLastTripLogRecord' class="column-highlight">{{v.daysSinceLastTripLogRecord}}</td>
+            <td ng-hide='hide.vehicleOwnerName'>{{v.vehicleOwnerName}}</td>
+            <td ng-hide='hide.packageDesc'>{{v.packageDesc}}</td>
+            <td ng-hide='hide.packageStartDate'>{{v.packageStartDate}}</td>
+            <td ng-hide='hide.packageExpireDate'>{{v.packageExpireDate}}</td>
+            <td ng-hide='hide.activationStatusDesc'>{{v.activationStatusDesc}}</td>
+            <td ng-hide='hide.demoDevice'>{{v.demoDevice}}</td>
+            <td ng-hide='hide.vin'>{{v.vin}}</td>
+            <td ng-hide='hide.deviceSerialNo'>{{v.deviceSerialNo}}</td>
+            <td ng-hide='hide.deviceSoftwareVersion'>{{v.deviceSoftwareVersion}}</td>
+            <td ng-class="{'expandedExpander-cell': v.showDetails == true}"><i ng-click="v.showDetails = !v.showDetails" ng-show="v.notes" class="xpand icon-plus-sign view_details_submit" ng-class="{'icon-plus-sign': v.showDetails == false,'icon-minus-sign': v.showDetails == true}" ></i></td>
+          </tr>
+
+          <tr class="transactionRow" ng-show="v.showDetails">
+            <td colspan="18" style="padding-top:15px; padding-bottom:15px">
+              <table class="transaction-report">
+                <tbody>
+                  <tr>
+                    <td class="detailsTD">Notes: {{v.notes || "No notes exist for this vehicle." }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

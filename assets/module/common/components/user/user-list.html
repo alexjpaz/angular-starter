@@ -1,0 +1,31 @@
+<div class='user-list'>
+	<table class='table table-bordered'>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Phone</th>
+				<th>Role</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat='u in users'>
+				<td>
+					<a href='#/profile/{{ u.personId }}'>{{ u.firstName }} {{ u.lastName }}</a>
+				</td>
+				<td>{{ u.phoneNo }}</td>
+				<td>
+					<span ng-repeat='br in u.businessRoles'>{{ br.businessRoleName }}</span>
+				</td>
+				<td>
+					<a href='#/profile/{{ u.personId }}' class='btn btn-inverse btn-small'>
+						<i class="icon-user icon-white"></i>
+					</a>
+				</td>
+				<td>
+					<a href="#/user/{{ u.personId }}" class="btn btn-small" rel="tooltip"><i class="icon-pencil"></i> Edit</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,40 @@
+<div class='screen-developer-app'>
+	<block block-title='Application Settings'>
+	<fieldset>
+		<legend>Services Configuration</legend>
+		<div class='control-group'>
+			<label>restUrl</label>
+			<input class='input-xxlarge' type='text' ng-model='App.config.restUrl' />
+			<button class='btn' ng-click='setEnv("test")'>test</button>
+			<button class='btn' ng-click='setEnv("dev")'>dev</button>
+			<button class='btn' ng-click='setEnv("prod")'>prod</button>
+		</div>
+		<div class='control-group'>
+			<label>enableCORS</label>
+			<input type='checkbox' ng-model='App.config.enableCORS' />
+		</div>
+		</fieldset>
+	<fieldset>
+		<legend>Language</legend>
+		<div class='control-group'>
+			<label>Language Key</label>
+			<input class='input-large' type='text' ng-model='App.config.languageKey' />
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Branding</legend>
+		<div class='control-group'>
+			<label>Logo</label>
+			<input class='input-xxlarge' type='text' ng-model='App.config.branding.logo' />
+			<img ng-src='{{ App.config.branding.logo }}' />
+		</div>
+		<div class='control-group'>
+			<label>Name</label>
+			<input class='input-xxlarge' type='text' ng-model='App.config.branding.name' />
+		</div>
+	</fieldset>
+	</block>
+	<block>
+	  <pre>{{ UserSession | json }}</pre>
+	</block>
+</div>

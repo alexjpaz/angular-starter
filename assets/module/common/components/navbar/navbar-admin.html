@@ -1,0 +1,16 @@
+<div class="container-fluid admin">
+	<div class='row-fluid user-admin hidden-phone'>
+		<div class="span7">
+			<div class="shop_profile">
+				<div class="shop_img_wrapper hidden-phone hidden-tablet">
+					<img ng-src="//s3.amazonaws.com/bucketimgs3{{ App.session.user.applicationBranding.affiliationLogo }}.png" alt="{{ App.session.user.applicationBranding.affiliationName }}">
+				</div>
+				<ul class="shop_info">
+					<li id="shop_name"><a href="/carcare/business/business_detail.jsp?bid=169">{{ App.session.user.businessName }}</a></li>
+					<li id="shop_email"><a href="mailto:service@jakesgarage.com" target="_new">{{ App.session.user.servicingShop.primaryEmailAddress }}</a></li>
+					<li id="shop_number">{{ App.session.user.servicingShop.phoneNoFormatted }}</li>
+				</ul><!-- end shop_info -->
+			</div><!-- end shop -->
+		</div>
+	</div>
+</div><!-- end user admin -->

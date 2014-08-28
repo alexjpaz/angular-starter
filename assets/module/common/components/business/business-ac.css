@@ -1,0 +1,31 @@
+.business-ac {
+	border-bottom: 1px solid #ddd;
+	position: relative;
+}
+
+.business-ac__results {
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+	position: absolute;
+	z-index: 9000;
+}
+
+.business-ac__item {
+	border: 1px solid #ddd;
+	border-bottom: 0;
+	background: #fff;
+	padding: 4px;
+	cursor: pointer;
+
+}
+
+
+
+.business-ac__item--selected {
+	color: #fefefe;
+	background: #0af;
+}
+
+
+.business-ac__item:hover {
+}
+

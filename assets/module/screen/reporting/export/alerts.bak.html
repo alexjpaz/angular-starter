@@ -1,0 +1,71 @@
+<div class="screen-alert-exporter"><!--begin controller div-->
+  <block>
+      <div class="instructions-container">    
+        <h2 ng-click='showInstructions = !showInstructions'><i class="icon-plus-sign" ng-class="{'icon-plus-sign': showInstructions == false,'icon-minus-sign': showInstructions == true}" ></i> Reporting: Alert Export</h2>
+        <div class="instructions" ng-show='showInstructions'>
+		<p class="intro">{{ 'REPORTING_ALERTS_DESC' | tr }}</p>
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+      
+      <div class="control-group">
+          <hr>
+          <!--<label for="timingByType">Get Report By</label>-->
+          
+          <div class="controls">
+			  <label for="vidDropdown">{{ "ALERT_EXPORT_VEHICLE_INSTRUCTION" | tr }}</label>
+            <select ng-model="url.vid" id="vidDropdown">
+              <option ng-repeat="vehicle in vehicles" value="{{vehicle.vehicleId}}">{{vehicle.vehicleNickname || vehicle.vehicleText }} - {{vehicle.vehicleId}}</option>
+            </select>
+          </div>
+          <div class="controls">
+			  <label for="alertTypeDropdown">{{ "ALERT_EXPORT_ALERT_TYPE_INSTRUCTION" | tr }}</label>
+            <select ng-model="url.alertType" size="8" multiple="multiple" id="alertTypeDropdown">
+              <option ng-repeat="alert in alertTypes" value="{{alert.eventType}}">{{alert.eventType}}</option>
+            </select>
+          </div>
+        </div>
+      <div class="form-actions">
+        <div class="control-group" id="orderStatusDiv">
+          <label for="vid">Vehicle ID:</label>
+          <div class="controls">
+            <input ng-model="url.vid" name="vid" id="vid" type="text" placeholder="Enter Vid">
+          </div>
+        </div>
+        <div class="control-group" id="orderStatusDiv">
+			<label for="orderStatus">{{ "BEGINNING_DATE" | tr }} (mm-dd-yyyy):</label>
+          <div class="controls">
+            <input ng-model="url.start" name="start" id="start" type="text" placeholder="Enter Start Date">
+          </div>
+        </div>
+        <div class="control-group" id="orderStatusDiv">
+		  <label for="orderStatus">{{ "END_DATE" | tr }} (mm-dd-yyyy):</label>
+          <div class="controls">
+            <input ng-model="url.end" name="end" id="end" type="text" placeholder="Enter Start Date">
+          </div>
+        </div>
+        <div class="control-group" id="orderStatusDiv">
+		  <label for="orderStatus">{{ "MAX_TRIP" | tr }}</label>
+          <div class="controls">
+            <select id="url.max" name="max" ng-model="url.max">
+              <option value="100">100</option>
+              <option value="200">200</option>
+              <option value="300">300</option>
+              <option value="400">400</option>
+              <option value="500">500</option>
+              <option value="600">600</option>
+              <option value="700">700</option>
+              <option value="800">800</option>
+              <option value="900">900</option>
+              <option value="1000">1000</option>
+            </select>
+          </div>
+        </div>
+      </div>            
+
+	  <a ng-if="url.vid && url.start && url.end" class="btn btn-primary" ng-href='/telematics/rest/reporting/vehicle/211/export/alerts?{{ url | param: shallow}}' target="_blank">{{ "EXPORT" | tr }}</a>
+      <!--<a ng-if="url.vid && url.start && url.end" class="btn btn-primary" ng-href="/telematics/rest/reporting/vehicle/{{url.vid}}/export/triplog?start={{url.start}}&end={{url.end}}&max={{url.max}}" target="_blank">Export Trip Log</a>-->
+  </block>
+      
+    
+
+</div><!-- end controller div-->

@@ -1,0 +1,8 @@
+.reports-slider {
+	width: 100%;
+}
+
+
+.reports-slider div[jq-ui-slider] {
+	width: 100%;
+}

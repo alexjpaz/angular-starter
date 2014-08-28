@@ -1,0 +1,56 @@
+<div class="navbar-inner">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12 full">
+                    <a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a href="/carcare/" class="brand">
+						<span>{{ Session.user.applicationBranding.applicationName }}</span>
+                    </a>
+
+					<!-- top bar -->
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <!-- mobile/tablet navigation -->
+							<li class="hidden-desktop" ng-repeat='li in mobile' if-any-role='li.role'><a ng-href='{{ li.href }}'>{{ li.text | trn }}</a><li>
+                           <!-- mobile/tablet navigation -->
+						   <li ng-repeat='li in links' class='dropdown' id="{{ li.id }}" if-any-role='li.role'>
+							   <a ng-if='!li.group' if-any-role='li.role' href='{{ li.href }}'>{{ li.text | trn }}</a>
+							   <a ng-if='li.group' if-any-role='li.role' href="#" data-toggle="dropdown">{{ li.text | trn  }}<b class="caret" ng-if='li.group'></b></a>
+							   <ul class="dropdown-menu" ng-if='li.group'>
+								   <li ng-repeat='lm in li.group.links' if-any-role='li.role'><a href='{{lm.href}}'>{{ lm.text | trn }}</a></li>
+							   </ul>
+						   </li>
+
+						</ul><!-- end nav -->
+					</div><!-- end nav-collapse -->
+
+                        <div class="user_profile pull-right">
+                            <ul class="user_info">
+                              <li id="user_name"><a href="index.jsp">{{Session.user.firstName}} {{App.session.user.lastName}}</a></li>
+                                <li id="user_role">{{Session.user.roles[0].roleDesc}}</li>
+                            </ul><!-- end user_info -->
+                        
+                            <div class="user_img_menu dropdown navbar">
+                                <a href="#" data-toggle="dropdown" class="user_img_menu_a" id="ddlogout"><span class="caret"></span></a>
+                                <ul class="dropdown-menu right">
+                                    <li id="li_user_name"><strong>{{Session.user.loginId}}</strong></li>
+                                    <li><a href="#/account/profile"><i class="icon-fixed-width icon-user"></i> {{'YOUR_PROFILE'|trn}}</a></li>
+                                    <li id="orders"><a href="/carcare/accounts/orders.jsp"><i class="icon-fixed-width icon-folder-open"></i> {{'YOUR_ORDERS'|trn}}</a></li>
+                                    <li id="cart_open"><a href="/carcare/accounts/cart.jsp"><i class="icon-fixed-width icon-shopping-cart"></i> {{'YOUR_CART'|trn}}</a></li>
+                                    <li id="subs"><a href="/carcare/accounts/subscriptions.jsp"><i class="icon-fixed-width icon-envelope"></i> {{'YOUR_SUBSCRIPTIONS'|trn}}</a></li>
+                                    <li><a href="/carcare/accounts/change_pass.jsp"><i class="icon-fixed-width icon-key"></i> {{'CHANGE_PASSWORD'|trn}}</a></li>
+                                    <li><a href="/logout.jsp"><i class="icon-fixed-width icon-unlock"></i> {{'LOG_OUT'|trn}}</a></li>
+                                </ul><!-- end dropdown -->
+                            </div><!-- end user_img_menu -->
+                            <div class="user_img_wrapper">
+                                <a href="#/profile"><img id="userpic" img-gravatar alt="avatar" /></a>
+                          </div><!-- end user_img_wrapper -->
+                        </div><!-- end Profile -->
+                </div><!-- end span12 full -->
+            </div><!-- end row-fluid -->
+        </div><!--end container-fluid -->
+    </div><!-- end navbar-inner -->

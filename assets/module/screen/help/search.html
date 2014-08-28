@@ -1,0 +1,20 @@
+<div class='screen-help-topic-search'>
+	<block-tab block-title='Search Topics' links='help'>
+		<form ng-submit='searchTopics(params)'>
+			<input type='text' ng-model='params.search' placeholder='Search' />
+			<input type='text' ng-model='params.tag' placeholder='Search by tag' />
+			<input type='submit' class='btn btn-search btn--form-fix' value='Search' />
+			<a link-topic-edit='new' show-role='SYSADMIN' class='btn btn-primary btn--form-fix'><i class="icon-plus"></i> New Topic</a>
+		</form>
+		<div class='screen-help-topic-search__results'>
+			<article ng-repeat='t in results.topics'>
+				<h4>
+					<a link-topic='{{ t.id }}'>{{ t.title || t.id || "NO_TITLE" }}</a>
+				</h4>
+				<div ng-bind-html='t.content'></div>
+				<a link-topic-edit='{{ t.id }}' show-role='SYSADMIN' class='btn btn-primary edit_button pull-left'><i class="icon-edit"></i> Edit</a>
+				<div topic-tags='t.tags'></div>		
+			</article>
+		</div>
+	</block-tab>
+</div>

@@ -1,0 +1,71 @@
+<div class='vehicle-table'>
+	<div class='vehicle-table__filter' ng-if='vehicles'>
+		<div class='pull-left'>
+			<span>Show</span>
+			<select ng-model='filter.rows'>
+				<option value='10'>10</option>
+				<option value='25'>25</option>
+				<option value='50'>50</option>
+			</select>
+		</div>
+		<div class='pull-right'>
+			<span>Search: </span>
+			<input ng-model='filter.text' type='text' />
+		</div>
+	</div>
+	<table class='table table-bordered table-striped'>
+		<thead>
+			<tr>
+				<th vehicle-table-sort='vehicle.vehicleNickname'>Name</th>
+				<th vehicle-table-sort='vehicle.vechicleText'>Description</th>
+				<th vehicle-table-sort='vehicle.vin'>VIN</th>
+				<th vehicle-table-sort='vehicleOwner.vehicleOwnerName'>Owner</th>
+				<th vehicle-table-sort='servicingShop.businessName'>Shop</th>
+				<th vehicle-table-sort='vehiclePackage.packageDesc'>Package</th>
+				<th colspan='3'></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-if='!vehicles && !error'>
+				<td colspan="9" class='vehicle-table__loading'><img src="//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif" alt="loading"> Getting Vehicles...</td>
+			</tr>
+			<tr ng-if='error'>
+				<td colspan="9">
+<div class="alert alert-error center">There was an error getting vehicles, please try again</div>
+				</td>
+			</tr>
+			<tr ng-repeat='v in vehicles | vehicleFilter:filter.text | orderBy:filter.sort:filter.reverse | limitTo:filter.rows '>
+				<td><a href='#/vehicle/{{ v.vehicle.vehicleId }}/overview'>{{ v.vehicle.vehicleNickname }}</a></td>
+				<td><a href='/carcare/vehicles/vehicle_detail.jsp?vid={{ v.vehicle.vehicleId }}'>{{ v.vehicle.vehicleText }}</a></td>
+				<td>{{ v.vehicle.vin }}</td>
+				<td><a href='/carcare/accounts/user_profile.jsp?pid={{v.vehicleOwner.personId}}'>{{ v.vehicleOwner.vehicleOwnerName }}</a></td>
+				<td>
+					<span ng-repeat='d in v.drivers'>
+						{{ d.lastName }}, {{ d.firstName }}
+					</span>
+				</td>
+				<td><a href='/carcare/business/business_detail.jsp?bid={{v.servicingShop.servicingShopId}}'>{{ v.servicingShop.businessName }}</td>
+				<td>{{ v.vehiclePackage.packageDesc }}</td>
+				<!-- actions -->
+				<td>
+					<span ng-if='v.deviceInfo.devicePermissions.deviceConfigure'>
+						<a href="/carcare/setup/choose_alerts.jsp?vid={{v.vehicle.vehicleId}}&void={{v.vehicleOwner.vehicleOwnerId}}" class="btn btn-small btn-inverse"><i class="icon-cog icon-white"></i></a>
+					</span>
+					<span ng-if='v.deviceInfo.deviceSerialNo == null && v.vehiclePermissions.addDevice'>
+						<a href="/carcare/setup/add_device.jsp?vid={{v.vehicle.vehicleId}}&void={{v.vehicleOwner.vehicleOwnerId}}&ownerType={{v.vehicleOwner.vehicleOwnerType}}&busType={{v.vehicleOwner.businessType}}" class="btn btn-small btn-warning" ><i class="icon-cog icon-plus icon-white"></i></a>
+					</span>
+
+				</td>
+				<td>
+					<a class="btn btn-small" href="vehicle_edit.jsp?vid={{ v.vechile.vid }}"><i class="icon-pencil"></i> Edit</a>
+				</td>
+				<td>
+					<a class="btn btn-small btn-danger" href="vehicle_edit.jsp?vid={{ v.vechile.vid }}" ng-if='v.vehiclePermissions.deleteVehicle'><i class="icon-trash icon-white"></i> Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class='vehicle-table__pages' ng-if='vehicles'>
+		<a ng-click='filter.rows = filter.rows + 10' class='btn pull-right'>Show more</a>
+	</div>
+</div>

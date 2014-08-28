@@ -1,0 +1,13 @@
+		<block block-title='Permissions'>
+			<code if-has='NOPE'>{{ 1 + 2 }}</code>
+			<div ng-repeat='(permKey, perm) in currentUser.globalPermissions'>
+				<a ng-click='togglePermission(permKey)' 
+					class='btn'
+					ng-class='{"btn-success":perm}'>{{ permKey }}</a>
+				<code>{{ perm }}</code>
+				<div class='pull-right'>
+					<span class='label label-info' ng-if='perm'>ng-if</span>
+				</div>
+			</div>
+		</block>
+

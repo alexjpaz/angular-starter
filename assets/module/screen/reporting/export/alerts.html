@@ -1,0 +1,143 @@
+<style>
+.block, .block-content {overflow: visible}
+.block-heading {display:none}
+.block-content {border:none;padding:0}
+.shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-alert-exporter"><!--begin controller div-->
+  <div reports-nav></div>
+  <block>
+      <div class="instructions-container">    
+        <h2 ng-click='showInstructions = !showInstructions'><i class="icon-plus-sign" ng-class="{'icon-plus-sign': showInstructions == false,'icon-minus-sign': showInstructions == true}" ></i> {{ "REPORTING" | trn }}: {{ "ALERT_REPORT" | trn}}</h2>
+        <div class="instructions" ng-show='showInstructions'>
+		      <p class="intro">{{ "REPORTING_ALERTS_DESC" | trn }}</p>
+          <h4>{{ "REPORT_PERIOD" | trn }}</h4>
+          <p>{{ "DATE_RANGE_DESC" | trn }}</p>
+          <h4>{{ "SORTING" | trn }}</h4>
+          <p>{{ "SORTING_DESC" | trn }}</p>
+          <h4>{{ "FILTERING_RESULTS" | trn }}</h4>
+          <p>{{ "FILTERING_DESC" | trn }}</p>
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+      <div ng-hide="userReports.ALERTS_SINGLE_VEHICLE" class="control-group well">
+        <p>Your account does not have permission to view this report. If you believe this is in error, please contact support: {{ userData.support }}</p>
+      </div>
+      
+        
+      <div ng-show="userReports.ALERTS_SINGLE_VEHICLE" class="control-group well">
+        
+        <div id="languageControl-div" show-role='SYSADMIN' class='controls' reports-lang></div>
+        <div reports-vehicle-list='url.vehicleId'></div>
+
+		    <div ng-if="url.vehicleId && alertTypes" class="controls">
+          <h3 class="report-label" id="alertTypes-label">{{ "ALERT_TYPES" | trn}}</h3>
+          <select v-chosen ng-model="url.alertType" size="8" data-placeholder="Click to Choose Alerts..." multiple="multiple" id="alertTypeDropdown" class="alertType-input" ng-options='a.eventType as alertTypeLabel(a) for a in alertTypes'></select>
+          <hr>
+        </div>
+        
+        <form id="rangeType" name="rangeType" class="form-inline" ng-submit="getReport()">
+
+          <h3 class="report-label" id="reportPeriod-label">{{ "REPORT_PERIOD"| trn }}</h3>
+         
+          <div id="exportableDateRange" style="display:inline">
+            <span ng-show="url.range">
+              <input reports-pickadate='url.start' name='startDate' id='pickaStartDate'/>
+              <label for="endDate" class="label-inline ng-binding" id="to">to&nbsp;&nbsp;&nbsp;</label>
+              <input reports-pickadate='url.end' name='endDate' id='pickaEndDate'/>
+            </span>
+          </div>
+
+          <span class="hidden-phone hidden-tablet" ng-hide="url.range">Last</span> <input ng-hide="url.range" class="input-mini inline" ng-model="url.days" name="days" id="daysPrior-input" type="text" placeholder="Last __ Days"> <span class="hidden-phone hidden-tablet" ng-hide="url.range">&nbsp;Days</span>
+
+          <input type="checkbox" name="range" id="range" ng-model="url.range" style="margin-left:10px" /> Date Range
+        </form>
+        <hr>  
+
+        <div reports-max-input='url.max' name="max"></div>
+
+        <div ng-show="url.vehicleId" class="control-group" id="generate-report">
+
+          <a class="btn btn-primary" ng-click="getReport()" translate>View Alert Report</a>
+
+          <a class="btn btn-primary" ng-hide="report.noResults.length > 1" ng-href="/telematics/rest/reporting/vehicle/{{url.vehicleId}}/alerts/export?{{ url | param: shallow}}" target="_blank">{{ "EXPORT_AS_CSV" | trn }}</a>
+        </div>
+        <div ng-if="report || reportLoading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || reportLoading, 'alert-danger': report.noResults.length > 1}">
+          <div id='reportLoading' ng-show='reportLoading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              {{ "LOADING" | trn}} {{ "REPORT" | trn}}...&nbsp;
+          </div>
+          <div ng-show="report">
+            <div id="vehicleInfo_report" ng-if="report.0.vehicleId">
+              <span class="xpand" ng-click='expandVehicleDetails = !expandVehicleDetails'><i class="icon-plus-sign" ng-class="{'icon-plus-sign': expandVehicleDetails == false,'icon-minus-sign': expandVehicleDetails == true}" ></i> <strong>{{ "VEHICLE_ID" | trn}} {{report.0.vehicleInfo.vehicleId}} {{report.0.vehicleInfo.vehicleNickname}}</strong> / <strong>{{report.0.vehicleInfo.year}} {{report.0.vehicleInfo.makeDesc}} {{report.0.modelDesc}} ({{report.0.vehicleInfo.engineDesc}})</strong></span>
+              <div ng-if="expandVehicleDetails" id="expanded-vehicleDetails">
+                {{ "VIN" | trn }}: {{report.0.vehicleInfo.vin}}, {{ "OWNER_DETAIL" | trn }}: {{report.0.vehicleOwner.vehicleOwnerName}} | Device ID: {{report.0.deviceId}}, {{ "DEVICE_SERIAL_NUMBER" | trn }}: {{report.0.deviceSerialNo}}
+              </div>
+            </div>
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}<br></div><br>
+            <strong>{{ "REPORT_PERIOD" | trn }}</strong>: <span ng-if="url.start">{{url.start}} - {{url.end}}</span><span ng-if="!url.start">Last {{url.days || "7"}} Days</span><br>
+            <strong>{{ "ALERT_TYPES" | trn}}</strong>: {{url.alertType || "All"}}<br>
+            <strong>{{ "TOTAL_ALERTS" | trn}}</strong>: {{totalAlerts | number:0}}
+          </div>
+        </div>
+      </div><!--end control group-->
+
+      <div ng-if='report && !report.noResults && userReports.ALERTS_SINGLE_VEHICLE' class='control-group' id="quick-search">
+        <label for="orderSearch" class="label-inline">{{ "FILTER_RESULTS_BY" | trn}}:</label>
+        <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder='{{ "FILTER_RESULTS_PLACEHOLDER" | trn }}' ><!--translate placeholder text-->
+      
+        <div class='reports-visibility dropdown pull-right'>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span translate>Show / Hide Columns</span></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li ng-repeat='col in columns' ng-init='ch = hide[col.columnKey]'>
+              <a href ng-click='toggleColumn(col.columnKey)' ng-class="{'hidden-column': hide[col.columnKey]}">
+                <i class='icon-eye-open' ng-hide='hide[col.columnKey]'></i>
+                <i class='icon-eye-close' ng-show='hide[col.columnKey]'></i>
+                <span ng-bind='{{ col.trnKey | trn }}'></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <table ng-if="report && userReports.ALERTS_SINGLE_VEHICLE" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            <th ng-hide='hide.deviceEventId' class="sortable hidden-phone hidden-tablet" th-sort-icon="deviceEventId">{{ "DEVICE_EVENT_ID" | trn}}</th>
+            <th ng-hide='hide.dateStringAdjForTimezone' class="sortable" th-sort-icon="$sortDate">{{ "DATE" | trn}}</th>
+            <th ng-hide='hide.tripNumber' class="sortable" th-sort-icon=="alert.alertDetail.tripNumber">Trip #</th>
+            <th ng-hide='hide.alertType' class="sortable" th-sort-icon="alertDetail.alertType">Type</th>
+            <th ng-hide='hide.eventDescription' class="sortable" th-sort-icon="alertDetail.eventDescription">Description</th>
+            <th ng-hide='hide.latitude' class="sortable" th-sort-icon="alertDetail.latitude">Coordinates</th>
+            <th ng-hide='hide.nearestAddress' class="sortable" th-sort-icon="alertDetail.nearestAddress" translate>Approximate Address</th>
+            <th show-role="SYSADMIN" class="sortable" th-sort-icon='distanceFromAddress'>Distance from Address</th>
+            <th ng-hide='hide.additionalInfo' class="sortable" th-sort-icon="alertDetail.additionalInfo" translate>Additional Info</th>
+            <th show-role="SYSADMIN" class="sortable" th-sort-icon='timeSinceLastTripSeconds'>Time since last Trip</th>
+            <th show-role="SYSADMIN" class="sortable" th-sort-icon='timeToNextTripSeconds'>Time to next Trip</th>
+            <!--<th class="non-sortable">{{ "DETAILS" | trn}}</th>-->
+            
+          </tr>
+        </thead>
+
+        <tbody ng-repeat="alert in report | filter:filter.text | orderBy: sort.by : sort.reverse" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+          <tr class="order mainReportRow-row">
+            <td ng-hide='hide.deviceEventId' class="hidden-phone hidden-tablet">{{alert.deviceEventId}}</td>
+            <td ng-hide='hide.eventDate'>{{alert.alertDetail.dateStringAdjForTimezone}} {{alert.alertDetail.timeStringAdjForTimezone}}</td>
+            <td ng-hide='hide.tripNumber'><a ng-href="/carcare/vehicles/trip_report.jsp?vid={{url.vehicleId}}&tripId={{alert.alertDetail.tripNumber}}" target="_self">{{alert.alertDetail.tripNumber}}</a></td>
+            <td ng-hide='hide.alertType'>{{alert.alertDetail.alertType}}</td>
+            <td ng-hide='hide.eventDescription'>{{alert.alertDetail.eventDescription}}</td>
+            <td ng-hide='hide.latitude'><a ng-href="https://www.google.com/maps/preview?q={{alert.alertDetail.latitude}}+{{alert.alertDetail.longitude}}" target="_blank">{{alert.alertDetail.latitude}}<br>{{alert.alertDetail.longitude}}</a></td>
+            <td ng-hide='hide.nearestAddress'>{{alert.alertDetail.nearestAddress}}</td>
+            <td show-role="SYSADMIN">{{alert.alertDetail.distanceFromAddress | number: 1}} {{alert.alertDetail.distanceFromAddressUom}}</td>
+
+            <td ng-hide='hide.additionalInfo'>{{alert.alertDetail.additionalInfo}}</td>
+            <td show-role="SYSADMIN">{{alert.alertDetail.timeSinceLastTripSeconds | seconds2Minutes}}</td>
+            <td show-role="SYSADMIN">{{alert.alertDetail.timeToNextTripSeconds | seconds2Minutes}}</td>
+
+
+          </tr>
+        </tbody>
+      </table>
+  </block>
+      
+</div><!-- end controller div-->

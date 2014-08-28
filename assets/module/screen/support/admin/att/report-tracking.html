@@ -1,0 +1,111 @@
+<style>
+  .block {overflow: visible}
+  .block-content {overflow:auto}
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+<div class="screen-report-tracking-report"><!--begin controller div-->
+  <block style="overflow:auto">
+      <div class="instructions-container">    
+
+        <h2 ng-click='showInstructions = !showInstructions'><i class="icon-plus-sign" ng-class="{'icon-plus-sign': showInstructions == false,'icon-minus-sign': showInstructions == true}" ></i> {{ "REPORTING" | trn }}: <span translate>Report Tracking</span></h2>
+        <div class="instructions" ng-show='showInstructions'>
+          <p class="intro" style="border-bottom:none;" translate>This report displays the tracking data collected for the new reporting section.</p>
+        </div><!--end instructions collapsible-->
+      </div><!--end instructions container -->
+      
+      
+      
+        
+        
+        <div ng-if="report || reportLoading" id="exportableReport-summary" class="alert" ng-class="{'alert-info': report.length > 1 || reportLoading, 'alert-danger': report.noResults.length > 1}" style="margin-top:0; margin-bottom:20px">
+          <div id='reportLoading' ng-show='reportLoading && !report' >
+              <img src='//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif' alt='loading' />
+              <span>{{ "LOADING" | trn}}...&nbsp;<em></em></span>
+          </div>
+          <div ng-show="report">
+            <a class="btn btn-primary" ng-click="getReport()"><span translate>Refresh</span></a>
+            <div ng-if="report.noResults" style="font-weight:bold">{{report.noResults}}<br></div>
+            <strong><span translate>Total Reports Tracked</span></strong>: {{report.length}}<br>
+            <span ng-show="notes"><strong><span translate>Notes</span></strong>: {{notes}}</span>
+          </div>
+        </div><!--end summary-->
+      
+
+
+		<!-- hide/show columns -->
+	  <div ng-if='report && !report.noResults' class='control-group' id="quick-search">
+		  <div>
+			  <label for="orderSearch" class="label-inline" >{{ "FILTER_RESULTS_BY" | trn}}:</label>
+			  <input ng-model="filter.text" class="exportable" name="orderSearch" id="orderSearch" type="text" placeholder="any vehicle ID, word, number, etc">
+		    
+        <div class='reports-visibility dropdown pull-right'>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span translate>Show / Hide Columns</span></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li ng-repeat='col in columns' ng-init='ch = hide[col.columnKey]'>
+              <a href ng-click='toggleColumn(col.columnKey)' ng-class="{'hidden-column': hide[col.columnKey]}">
+                <i class='icon-eye-open' ng-hide='hide[col.columnKey]'></i>
+                <i class='icon-eye-close' ng-show='hide[col.columnKey]'></i>
+                <span ng-bind='{{ col.trnKey | trn }}'></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+		  
+	  </div>
+  
+      <table ng-if="report" id="orders_report" class="table table-striped table-bordered" >
+        <thead>
+          <tr>
+            
+            <th ng-hide='hide.loginId' class="sortable" th-sort-icon="loginId">User</th>
+            <th ng-hide='hide.personId' class="sortable" th-sort-icon="personId">PID</th>
+            <th ng-hide='hide.reportType' class="sortable" th-sort-icon="reportType">Report</th>
+            <th ng-hide='hide.reportRunDate' class="sortable" th-sort-icon="reportRunDate">Run Date</th>
+            <th ng-hide='hide.startDate' class="sortable" th-sort-icon="$sortStartDate">Report Start</th>
+            <th ng-hide='hide.endDate' class="sortable" th-sort-icon="$sortEndDate">Report End</th>
+            <th ng-hide='hide.environment' class="sortable" th-sort-icon="environment">Environment</th>
+            <th ng-hide='hide.reportRunMs' class="sortable" th-sort-icon="reportRunMs">Run Time</th>
+            <th ng-hide='hide.vehiclesQueried' class="sortable" th-sort-icon="vehiclesQueried">Vehicles Queried</th>
+            <th ng-hide='hide.vehiclesWithData' class="sortable" th-sort-icon="vehiclesWithData">w/ Data</th>
+            <th ng-hide='hide.resultsReturned' class="sortable" th-sort-icon="resultsReturned">Results</th>
+            <th ng-hide='hide.totals' class="sortable" th-sort-icon="totals">Totals</th>
+            <th ng-hide='hide.format' class="sortable" th-sort-icon="format">Format</th>
+            <th ng-hide='hide.parameters' class="sortable" th-sort-icon="parameters">Params</th>
+            <th ng-hide='hide.errorMessage' class="sortable" th-sort-icon="errorMessage">Error</th>
+            
+          </tr>
+        </thead>
+        <tbody ng-repeat="data in report | filter:filter.text | orderBy: sort.by : sort.reverse">
+          <tr class="order mainReportRow-row" ng-class-odd="'reportRow-odd'" ng-class-even="'reportRow-even'">
+            
+            <td ng-hide='hide.loginId'>{{data.loginId}}</td>
+            <td ng-hide='hide.personId'>{{data.personId}}</td>
+            <td ng-hide='hide.reportType'>{{data.reportType}}</td>
+            <td ng-hide='hide.reportRunDate'>{{data.reportRunDate | date: "MM/dd/yy h:mma"}}</td>
+            <td ng-hide='hide.startDate'>{{data.startDate}}</td>
+            <td ng-hide='hide.endDate'>{{data.endDate}}</td>
+            <td ng-hide='hide.environment'>{{data.environment}}</td>
+            <td ng-hide='hide.reportRunMs'>{{data.reportRunMs}} ms</td>
+            <td ng-hide='hide.vehiclesQueried'>{{data.vehiclesQueried}}</td>
+            <td ng-hide='hide.vehiclesWithData'>{{data.vehiclesWithData}}</td>
+            <td ng-hide='hide.resultsReturned'>{{data.resultsReturned}}</td>
+            <td ng-hide='hide.totals'>{{data.totals}}</td>
+            <td ng-hide='hide.format'>{{data.format}}</td>
+            <td ng-hide='hide.parameters'>{{data.parameters}}</td>
+            <td ng-hide='hide.errorMessage'>{{data.errorMessage}}</td>
+            
+          </tr>
+
+        </tbody>
+      </table>
+
+              
+  </block>
+      
+      
+
+</div><!-- end controller div-->

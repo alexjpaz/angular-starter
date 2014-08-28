@@ -1,0 +1,8 @@
+<div class='reports-visibility-menu'>
+	<div ng-repeat='c in report.columns' ng-click='c.visible = !c.visible'>
+		<i class='icon-eye-close' ng-hide='c.visible'></i>
+		<i class='icon-eye-open' ng-show='c.visible'></i>
+		<span>{{ c.name }}</span>
+	</div>
+</div>
+

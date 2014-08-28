@@ -1,0 +1,37 @@
+.screen-help-topic-edit .content__preview {
+	border: 1px solid #ccc;
+	padding: 4px;
+	border-radius: 4px;
+	min-height: 250px;
+}
+
+.screen-help-topic-edit .input--topic-title {
+	font-size: 2em;
+	padding: 8px;
+	height: 24px;
+	width: 98.5%;
+
+}
+
+
+.screen-help-topic-edit .fieldset--content textarea {
+	position: relative;
+	width: 100%;
+	min-height: 250px;
+}
+
+.screen-help-topic-edit .fieldset--formats  textarea {
+	position: relative;
+	width: 100%;
+}
+
+
+.screen-help-topic-edit .fieldset--formats  textarea,
+.screen-help-topic-edit .fieldset--formats  .content__preview {
+	min-height: 120px;
+}
+
+
+.screen-help-topic-edit .fieldset__action button {
+	margin-bottom: 10px;
+}

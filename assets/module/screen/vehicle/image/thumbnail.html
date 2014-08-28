@@ -1,0 +1,14 @@
+<div class='screen-vehicle-image-thumbnail'>
+	<block-tab block-title='Vehicle Images (Thumbnail)' links='vehicle'>
+		<h3>Thumbnail</h3>
+		<p>This is the image that will be shown for the vehicle on the "Overview" page</p>
+		<p class='alert alert-info'><strong>Note: </strong> If the correct image does not show after upload please wait for the cache to update or clear your browser's cache.</p>
+		<div class='screen-vehicle-image-thumbnail__image'>
+			<img img-s3='vehicle/{{ r.vehicleId }}/thumbnail' class='screen-vehicle-image-thumbnail__image--large'/>
+			<img img-s3='vehicle/{{ r.vehicleId }}/thumbnail' class='screen-vehicle-image-thumbnail__image--mid'/>
+			<img img-s3='vehicle/{{ r.vehicleId }}/thumbnail' class='screen-vehicle-image-thumbnail__image--small'/>
+		</div>
+
+		<div image-upload='imageUploadOptions' />
+	</block-tab>
+</div>

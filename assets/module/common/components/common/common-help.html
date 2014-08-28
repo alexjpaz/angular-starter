@@ -1,0 +1,38 @@
+<div class="common-help">
+  
+  <div ng-if="faqTopics">
+
+    <a ng-click="showFAQ = !showFAQ" ng-hide="showFAQ" class="needHelp_collapsed"><span class="needHelp_text"><strong>Need Help</strong> </span><i class="icon-question-sign needHelp_icon"></i></a>
+
+    <div ng-show="showFAQ" class="inlineFAQ-container borderedFAQ">
+
+      <strong>{{topicInput.sectionTitle}}</strong>&nbsp;&nbsp;<input ng-model="filterFAQ.text" class="couponThumbnailView search-query" name="faqSearch" type="text" placeholder="Filter by topic keyword">
+
+      <div class="windowControls pull-right">
+        <a href="/carcare/help/topic" title="View All Topics" target="_blank"><i class="icon-unchecked xpand" ></i></a>
+        <i class="icon-remove xpand linkStyle_color pointer-cursor" title="Hide FAQ" ng-click="showFAQ = !showFAQ"></i>
+      </div>
+
+      <div class="accordion" id="accordionFAQ">
+        <div ng-repeat="topic in faqTopics | filter: filterFAQ.text">
+          <div class="accordion-group">
+            <div class="clearfix accordion-heading">
+              <a href="#collapse__{{$index+1}}" data-toggle="collapse" class="accordion-toggle" ng-click="topic.expanded = !topic.expanded;">
+                <i class="icon-plus" ng-class="{'icon-plus': !topic.expanded,'icon-minus': topic.expanded}" ></i> {{topic.title}} 
+              </a>
+            </div>
+
+            <div class="accordion-body collapse" id="collapse__{{$index+1}}">
+
+              <div class="clearfix accordion-heading">
+                <a data-toggle='collapse' class='accordion-toggle sub-heading'>
+                  <span ng-bind-html="topic.formats.faq || topic.content"></span>
+                </a>
+              </div>                                  
+            </div><!-- accordon-body -->
+          </div><!-- faqTopics repeater -->
+        </div><!-- accordion-group -->
+      </div><!-- accordion -->
+    </div><!--end inlineFAQ container -->
+  </div>
+</div>

@@ -1,0 +1,13 @@
+.transaction-report tr.alert-danger td.detailsTD {
+    background-color: #f2dede !important;
+    border: 2px solid #eed3d7 !important;
+}
+
+.transaction-report tr.alert-success td.detailsTD {
+    background-color: #dff0d8 !important;
+    border: 2px solid #d6e9c6 !important;
+}
+
+tr.mainReportRow-row.reportRow-even > td.expandButton-td {
+    background: none !important;
+}

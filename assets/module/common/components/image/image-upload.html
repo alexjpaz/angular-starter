@@ -1,0 +1,34 @@
+<div class='image-upload'>
+	<input type="file" ng-file-select="onFileSelect($files)" multiple ng-hide='!multiple' />
+	<input type="file" ng-file-select="onFileSelect($files)" ng-show='!multiple' />
+		<div class='image-upload__drop'
+			ng-file-drop="onFileSelect($files)" 
+			ng-file-drag-over-class="image-upload__drop--over"
+			ng-show="dropSupported">drop files here</div>
+	<div ng-file-drop-available="dropSupported=true" 
+			ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
+	<hr />
+	<table class='table table-bordered table-striped' ng-show='upload.length > 0'>
+		<tbody>
+			<tr ng-repeat='up in upload'>
+				<td>{{ up.name || "UNKNOWN_FILENAME" }}</td>
+				<td>
+					<img ng-src='{{ up.dataUrl }}' width='48px' />
+				</td>
+				<td>
+					<span ng-if='up.working'>
+						<progress max="100" ng-value="up.progress"></progress>
+						<button ng-click='up.$promise.abort()'>Cancel</button>
+					</span>
+					<span ng-if='up.error' class='label label-important'>
+						Upload failed!
+					</span>
+					<span ng-if='up.success' class='label label-success'>
+						Upload successful!
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+

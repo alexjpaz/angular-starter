@@ -1,0 +1,12 @@
+<div class='screen-business-image-header'>
+	<block-tab block-title='Business Logo' links='business'>
+		<h3>Thumbnail</h3>
+		<p>This is the image that will be shown in the header</p>
+		<p class='alert alert-info'><strong>Note: </strong> If the correct image does not show after upload please wait for the cache to update or clear your browser's cache.</p>
+		<div class='screen-business-image-header__image'>
+			<img img-s3='business/{{ r.busEntId }}/logo' class='screen-business-image-header__image--small'/>
+		</div>
+
+		<div image-upload='imageUploadOptions' />
+	</block-tab>
+</div>

@@ -1,0 +1,34 @@
+<div class='user-profile'>
+	<div ng-if='error' class='alert alert-error'>
+		<span tr>Could not load data</span>
+	</div>
+	<div ng-if='!error'>
+		<div class='well' id='user_profile'>
+			<div class="profile_img_wrapper pull-left">
+				<img class="userpic" src="https://s3.amazonaws.com/bucketimgs3/shared/img/mystery_man.jpg" alt="avatar" />
+			</div><!-- end profile_img_wrapper -->
+			<div class='floatl'>
+				<h2>{{ profile.firstName }} {{ profile.lastName }}</h2>
+				<p ng-repeat='role in profile.businessRoles' class='label label-inverse'>{{ role.businessRoleName }}</p>
+			</div>
+			<div class="clearfix"></div>
+		</div><!-- end well -->
+		<div class='user_profile__updatePerson' ng-if='profile.personPermissions.updatePerson'>
+			<p>
+				{{ profile.address }}
+				<span><span ng-if='profile.city'>{{ profile.city }},</span> {{ profile.stateProv }} {{ profile.postalCode }}</span>
+			</p>
+			<p>
+				<span>{{ 'HOME_PHONE' | trn }}: {{ profile.phoneFormatted }}</span>
+				<span>{{ 'MOBILE_CELL_PHONE' | trn }}: {{ profile.cellFormatted }}</span>
+				<span>{{ 'SMS_TEXT' | trn }}: {{ profile.userProfileSmsAddress }}</span>
+			</p>
+
+			<p ng-repeat='email in profile.jsonEmailAddresses'>
+				<span ng-if='email.emailTypeCode === "P"'>{{ 'PRIMARY_EMAIL' | trn }}</span>
+				<span ng-if='email.emailTypeCode === "A"'>{{ 'ALTERNATE_EMAIL' | trn }}</span>
+				<span ng-if='email.emailTypeCode === "T"'>{{ 'SMS_TEXT' | trn }}</span>
+			</p>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,18 @@
+<div class='screen-developer-test-form'>
+	<p>
+		<label>text foo</label>
+		<input ng-model='f.foo' type='text' />
+	</p>
+	<p>
+		<label>text bar</label>
+		<input ng-model='f.bar' type='text' />
+	</p>
+	<p>
+		<label>hidden private field this won't post because of $</label>
+		<input ng-model='f.$hidden' type='text' />
+	</p>
+	<pre>{{ f | json }}</pre>
+
+	<button ng-click='submit()'>submit via resource</button>
+	<button ng-click='submitHttp()'>submit via $http</button>
+</div>

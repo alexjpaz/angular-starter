@@ -1,0 +1,31 @@
+<div class='screen-vehicle-image-list'>
+	<block-tab block-title='Vehicle Images' links='vehicle'>
+			<h3>Vehicle Images</h3>
+			<div class='vehicle-image-list'>
+				<div class='vehicle-image-list__gallery'>
+					<div class='vehicle-image-list__toolbar'>
+						<i class='icon-refresh' ng-click='refresh()'></i>
+					</div>
+					<div class='alert alert-info' ng-show='images == null'>
+						<span>loading gallery</span>
+					</div>
+					<div class='alert' ng-show='images.length == 0'>
+						<span>no images found for this vehicle</span>
+					</div>
+					<div class='alert alert-error' ng-show='images.$error'>
+						<span>error loading images</span>
+					</div>
+
+					<div class='vehicle-image-list__images'>
+						<div class='vehicle-image-list__image' ng-repeat='img in images | limitTo:25'>
+							<i class='icon-remove' ng-click='deleteImage(img)'></i>
+							<img ng-src='{{ img }}' alt='Vehicle Image' />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h4>Add New Images</h4>
+			<div image-upload='imageUploadOptions' multiple='true' />
+	</block-tab>
+</div>

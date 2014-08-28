@@ -1,0 +1,64 @@
+<style>
+  #reports-nav {text-align:center !important}
+  .block-heading {display:none}
+  .block-content {border:none;padding:0}
+  .shop_info, .shop_img_wrapper {display:none}
+</style>
+
+<div class="screen-reporting-index"><!--begin controller div-->
+  
+  <block>
+    <h2 style="text-align:center">{{ trans.REPORTING | trn }}</h2>
+    <div reports-nav></div>
+    <div id="languageControl-div" show-role="SYSADMIN" class="controls">
+      <h3 id="languageSelect-label" class="report-label">{{trans.LANGUAGE | trn }}</h3>
+      <select ng-model="language.select" id="languageSelect-select">
+        <option value="en">{{trans.ENGLISH | trn }}</option>
+        <option value="fr">{{trans.FRENCH | trn }}</option>
+        <option value="ar">{{trans.ARABIC | trn }}</option>
+      </select>
+      <hr>
+    </div>
+    <table class="table table-striped table-bordered hidden-phone" id="supportIndex">
+      <thead>
+        <th style="width:100px">{{ trans.REPORT | trn }}</th>
+        <th><span translate>Description</span></th>
+      </thead>
+      <tbody>
+        <tr ng-show="userReports.TRIP_LOG_SINGLE_VEHICLE">
+          <td style="width:100px"><a href="/carcare/reporting/export/trip-log"><i class="icon-file-text"></i>&nbsp; {{ trans.TRIP_LOG | trn}}: {{ trans.VEHICLE | trn }}</a></td>
+          <td>{{ trans.REPORTING_DASH_TRIP_LOG_DESC | trn }}</td>
+        </tr>
+        <tr ng-show="userReports.TRIP_LOG_MULTI_VEHICLE" hide-role='SYSADMIN'>
+          <td style="width:100px"><a href="/carcare/reporting/export/trip-log_location"><i class="icon-sitemap"></i>&nbsp; {{ trans.TRIP_LOG | trn}}: {{ trans.LOCATION | trn}}</a></td>
+          <td>This utility generates a trip log report for all vehicles belonging to a fleet location instead of a single vehicle. All other features are the same as the above report.</td>
+        </tr>
+        <tr ng-show="userReports.DAILY_MILEAGE_SUMMARY_SINGLE_VEHICLE">
+          <td style="width:100px"><a href="/carcare/reporting/export/mileage"><i class="icon-truck"></i>&nbsp; {{trans.MILEAGE | trn }}: {{trans.VEHICLE | trn }}</a></td>
+          <td>This utility can be used to generate an on-screen report for a single vehicle or export a CSV file of a vehicle's Mileage Summary based on its Trip Logs. CSV files can be opened in most spreadsheet programs like Microsoft Excel and OpenOffice OpenCalc.</td>
+        </tr>
+        <tr ng-show="userReports.DAILY_MILEAGE_SUMMARY_MULTI_VEHICLE" hide-role='SYSADMIN'>
+          <td style="width:100px"><a href="/carcare/reporting/export/mileage_fleet"><i class="icon-building"></i>&nbsp; {{trans.MILEAGE | trn }}: {{trans.LOCATION | trn }}</a></td>
+          <td>This utility can be used to generate an on-screen report for a fleet location or export a CSV file of a location's Mileage Summary based on Trip Logs. CSV files can be opened in most spreadsheet programs like Microsoft Excel and OpenOffice OpenCalc.</td>
+        </tr>
+        <tr ng-show="userReports.ODOMETER_LOG">
+          <td style="width:100px"><a href="/carcare/reporting/export/odometer"><i class="icon-dashboard"></i>&nbsp; <span translate>Odometer</span></a></td>
+          <td><span translate>This utility can be used to generate an on-screen report or export a CSV file of a vehicle's Mileage Summary and Odometer Log based on its recorded Odometer readings for a specified number of days. CSV files can be opened in most spreadsheet programs like Microsoft Excel.</span></td>
+        </tr>
+        <tr ng-show="userReports.ALERTS_SINGLE_VEHICLE">
+          <td style="width:100px"><a href="/carcare/reporting/export/alerts"><i class="icon-comment-alt"></i>&nbsp; {{trans.ALERTS | trn }}</a></td>
+          <td>{{ trans.REPORTING_ALERTS_DESC | trn }}</td>
+        </tr>
+        <tr ng-show="userReports.LAST_ALERT_LAST_TRIPLOG">
+          <td style="width:100px"><a href="/carcare/reporting/export/last-alert"><i class="icon-comments-alt"></i>&nbsp; Last Alert</a></td>
+          <td>This report displays all vehicles that have a telematics device with a current telematics package and includes the last alert and trip log received for each vehicle in the report. The report may be exported to CSV and imported into a spreadsheet program like Microsoft Excel.</td>
+        </tr>
+        <tr ng-show="userReports.VEHICLE_LIST">
+          <td style="width:100px"><a href="/carcare/reporting/export/vehicle-list"><i class="icon-list-alt"></i>&nbsp; <span translate>Vehicle List</span></a></td>
+          <td><span translate>This utility can be used to view and export a Vehicle List Report to CSV. CSV files can be opened in most spreadsheet programs like Microsoft Excel.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </block>
+
+</div><!-- end controller div-->

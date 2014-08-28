@@ -1,0 +1,135 @@
+<div class='screen-vehicle-overview'>
+	<block-tab block-title='Vehicle Overview' links='vehicle'>
+		
+		<div ng-if='!v && !$invalidVehicle'>
+				<img src="//s3.amazonaws.com/bucketimgs3/shared/img/ajax-loader.gif" alt="loading">
+				<span>Getting Vehicle Info...</span>
+		</div>
+
+		<div ng-if='$invalidVehicle' class="alert alert-error center" id="message">You have made an invalid selection.</div>
+
+		<div class='vehicle-info' ng-if='v'>
+			<img img-s3='vehicle/{{ r.vehicleId }}/thumbnail' />
+			<div class="alert alert-info center hide" id="info">
+				<div ng-if='v.vehiclePackage.daysLeft < 31'>
+					<a id='extend-package' class='btn btn-success' href='#'>Extend Package</a>
+					<span ng-show='v.vehiclePackage.daysLeft > 0'>Your package expires in {{ v.vehiclePackage.daysLeft }} Days. </span>
+					<span ng-show='v.vehiclePackage.daysLeft <= 0'>Please extend your package now to continue using all Telematics features and benefits</span>
+					<span>Please extend your package now to continue using all Telematics features and benefits.</span>
+				</div>
+			</div>
+			
+			<div ng-if='v.deviceInfo'>
+			<div class="device row-fluid" id="trips_alerts">
+				<div class="span2 center">
+					<span id="trips" class="big">
+						<span class="small">Total Trips</span><br>
+						<span class="data">{{ ubi.tripsTotal }}</span>
+					</span>
+				</div>
+				<div class="span2 center">
+					<span id="tripDist" class="big">
+						<span class="small">Avg. Trip Distance</span><br>
+						<span class="data">{{ ubi.avgDistancePerTrip }}</span>
+					</span>
+				</div>
+				<div class="span3 center">
+					<span id="distDay" class="big">
+						<span class="small">Avg. Distance Per Day</span><br>
+						<span class="data">{{ ubi.avgDistancePerDay }}</span>
+					</span>
+				</div>
+				<div class="span2 center">
+					<span id="alertsBr" class="big">
+						<span class="small">Hard Braking</span><br>
+						<span class="data">{{ ubi.hardBrakingIncidents }}</span>
+					</span>
+				</div>
+				<div class="span2 center">
+					<span id="alertsAc" class="big">
+						<span class="small">Hard Acceleration</span><br>
+						<span class="data">{{ ubi.hardAccelerationIncidents || 0 }}</span>
+					</span>
+				</div>
+			</div><!-- end fluid -->
+
+			<div class="well" id="btn-groups">
+				<div class="ac">
+
+					<a id="dev_settings" href="/carcare/setup/choose_alerts.jsp?vid={{ r.vehicleId }}" class="btn btn-inverse device"><i class="icon-cog icon-white"></i> Device Settings</a>&nbsp;
+					<a href="/carcare/help/device_troubleshoot.jsp?vid={{ r.vehicleId }}" class="btn btn-warning device"><i class="icon-warning-sign icon-white"></i> Troubleshoot Device</a>
+					<a class="btn device" id="locate_btn" href="location.jsp?vid={{ r.vehicleId }}"><i class="icon-map-marker"></i> Locate Vehicle</a>
+					<a class="btn" id="owner_detail" href="/carcare/business/business_detail.jsp?bid={{ v.vehicleOwner.busEntId }}"><i class="icon-user"></i> Owner Detail</a>
+					<a href="appt_req.jsp?vid={{ r.vehicleId }}" class="btn"><i class="icon-wrench"></i> Schedule Service</a>
+					<div class="btn-group device">
+						<a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">
+							Device Admin
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a id="rdp" href="#" rel="22403"><i class="icon-trash icon-white"></i> Remove Device</a></li>
+							<li><a id="shuffle" href="#"><i class="icon-refresh icon-white"></i> Shuffle Device</a></li>
+						</ul>
+					</div>
+				</div><!-- end ac -->
+			</div><!-- end well -->
+		</div>
+
+			<h3>Vehicle Info</h3>
+			<table class="table table-striped" id="vehicle_info">
+				<tbody><tr>
+						<th>Owner</th>
+						<td id="veh_owner">{{ v.vehicleOwner.vehicleOwnerName }}</td>
+						<th>Name</th>
+						<td id="veh_name">{{ v.vehicle.vehicleNickname }}</td>
+					</tr>
+					<tr>
+						<th>Year</th>
+						<td id="veh_year">{{ v.vehicle.year }}</td>
+						<th>Make</th>
+						<td id="veh_make">{{ v.vehicle.makeDesc }}</td>
+					</tr>
+					<tr>
+						<th>Model</th>
+						<td id="veh_model">{{ v.vehicle.modelDesc }}</td>
+						<th>Engine</th>
+						<td id="veh_engine">{{ v.vehicle.engineDesc }}</td>
+					</tr>
+					<tr>
+						<th>Odometer</th>
+						<td id="veh_odm">{{ v.distanceInfo.currentOdometer }} miles</td>
+						<th>Distance Per Year</th>
+						<td id="veh_dist">{{ v.distanceInfo.estMilesPerYear }} miles</td>
+					</tr>
+					<tr>
+						<th>Drive Type</th>
+						<td id="veh_hybrid">
+							<span ng-show='v.vehicle.hybridYn === "Y"'>Hybrid</span>
+							<span ng-show='v.vehicle.hybridYn === "N"'>Non-Hybrid</span>
+						</td>
+						<th>VIN</th>
+						<td id="veh_vin">{{ v.vehicle.vin }}</td>
+					</tr>
+					<tr id="device_info" class="device">
+						<th>Device Serial</th>
+						<td id="dev_serial">{{ v.deviceInfo.deviceSerialNo }}</td>
+						<th>Device Software</th>
+						<td id="dev_software">{{ deviceInfo.softwareVersion.deviceSoftwareVersion }} <a href="/carcare/vehicles/troubleshoot.jsp?vid={{ r.vehicleId }}" class="btn btn-warning btn-mini device"> Troubleshoot</a></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h3 id="driver_heading" class="hide">Drivers</h3>
+			<!-- end drivers -->
+
+			<table class="table hide table-striped" id="driver_info">
+				<tbody>
+					<tr>
+						<td>
+							<pre>{{ v.drivers }}</pre>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	</block>
+</div>

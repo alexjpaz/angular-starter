@@ -1,0 +1,15 @@
+.image-upload__drop {
+	border: 2px dashed;	
+	color: #aaa;
+	font-family: sans-serif;
+	font-size: 1em;
+	padding: 1em;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.image-upload__drop--over {
+	color: #66a;
+	border: 2px solid;
+	background: #aaf;
+}

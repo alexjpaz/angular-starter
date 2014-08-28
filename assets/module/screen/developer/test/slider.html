@@ -1,0 +1,60 @@
+<div class='screen-developer-test-slider'>
+	<div class='panel--controls'>
+		<h4>Text Search</h4>
+		<input type='text' ng-model='r.filterText' />
+		<h4>Limit Rows</h4>
+		<input type='number' ng-model='r.limitTo' />
+		<h4>Idle Slider</h4>
+		<div reports-slider='r' column='idle'></div>
+		<h4>"Bar" column Slider</h4>
+		<div reports-slider='r' column='bar'></div>
+		<!--<h4>StartDate Slider</h4>-->
+		<!--<div reports-slider='r' column='startDatetime'></div>-->
+		<h4>Visibility</h4>
+		<div reports-visibility-menu='r'></div>
+	</div>
+	<h4>Matching %</h4>
+	<p>{{ r.pct }}</p>
+	<table class='table table-bordered' reports-table='r'>
+		<thead>
+			<tr>
+				<td reports-col='name' sort>name</td>
+				<td reports-col='idle' sort>idle</td>
+				<td reports-col='startDateTime' sort>Start Date/Time</td>
+				<td reports-col='bar'>bar</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat='d in r.data | exportReport:r'>
+				<td reports-col='name'>{{ d.name }}</td>
+				<td reports-col='idle'>{{ d.idle }}</td>
+				<td reports-col='startDateTime'>{{ d.startDate }} {{ d.startTime}} <code>{{ d.$sortdate }}</code></td>
+				<td reports-col='bar'>{{ d.bar }}</td>
+			</tr>
+		<tbody>
+	</table>
+	<style>
+		.screen-developer-test-slider .panel--controls {
+			padding:20px; 
+			margin-bottom: 20px;
+			border-radius: 4px;
+			border: 1px solid #aaa; 
+			box-shadow: 1px 1px rgba(0,0,0,0.15);
+		}
+
+		.screen-developer-test-slider .sortable::before {
+			font-family: FontAwesome;
+			font-weight: normal;
+			font-style: normal;
+			display: inline-block;
+			padding-right: 5px;
+			color: #999999;
+		}
+
+		.screen-developer-test-slider .sortable::before { content: "\f0dc"; }
+		.screen-developer-test-slider .sortable.asc::before { content: "\f0de"; }
+		.screen-developer-test-slider .sortable.desc::before { content: "\f0dd"; }
+
+
+	</style>
+<div>

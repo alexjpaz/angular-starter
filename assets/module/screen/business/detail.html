@@ -1,0 +1,54 @@
+<div class='screen-business-detail'>
+	<block-tab block-title='Business' links='business'>
+		<div class='alert alert-error' ng-if='error'>
+			<span>Could not get business information</span>
+		</div>
+		<div class='screen-business-detail__info' ng-if='!error'>
+			<h3 id="busName">{{ mdl.businessName }}</h3>
+			<img img-s3='business/{{ r.busEntId }}/logo' class='screen-business-detail__logo' />
+			<p id="address_list">{{ mdl.address }}<br/>{{ mdl.city }},  {{ mdl.stateProv }} {{ mdl.postalCode }}</p>
+			<p id="phone_list">Phone: {{ mdl.phoneNoFormatted }}<br/>Fax:{{ mdl.faxNo }}<br/></p>
+			<p id="email_list">
+				<span>Primary Email: </span>
+				<a href="mailto:{{ mdl._email.primary }}">{{ mdl._email.primary }}</a>
+				<br/>
+				<span>Alternate Email: </span>
+				<a href="mailto:{{ mdl._email.alt }}">{{ mdl._email.alt }}</a>
+				<br/>
+			</p>
+
+			<div class="well" id="addBoxBusiness">
+				<div class="ac">
+					<a class="btn btn-primary add_vehicle" href="#/vehicle/add?bid={{mdl.busEntId}}&type=business"><i class="icon-plus-sign icon-white"></i> Add Vehicle</a>
+					<a class="btn btn-primary add_user" href="#/account/user/add?bid={{mdl.busEntId}}&type=business"><i class="icon-plus-sign icon-white"></i> Add User</a>
+				</div><!-- end ac -->
+			</div><!-- end well -->
+
+			<div id="busVehicles">
+				<h3>Vehicles</h3>
+				<table border="0" cellpadding="5" class="table table-striped">
+					<tbody>
+						<tr ng-repeat='v in vehicles'>
+							<td>
+								<a href="#/vehicle/{{ v.vehicleId }}">{{ v.vehicleNickname }} - {{ v.yearDesc }} {{ v.makeDesc }} {{ v.modelDesc }} {{ v.engineDesc }}</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- busVehicles -->
+
+			<div id="busUsers">     
+				<h3>Current Users</h3>
+				<table border="0" cellpadding="5" class="table table-striped">
+					<tbody>
+						<tr ng-repeat='u in users'>
+							<td>
+								<a href="#/account/profile/{{ u.personId }}">{{ u.firstName }} {{ u.lastName }}</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- busUsers -->
+		</div>
+	</block-tab>
+</div>
